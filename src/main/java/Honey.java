@@ -1,10 +1,35 @@
+import java.util.Scanner;
+
 public class Honey {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        greeting();
+        runChatLoop(scanner);
+        scanner.close();
+    }
+    
+    public static void greeting() {
         printBreak();
-        System.out.println("Hello! I'm Honey\n" + "What can I do for you?");
+        System.out.println(" Hello! I'm Honey <3");
+        System.out.println(" What can I do for you? I will do it SWEETLY ~");
         printBreak();
-        System.out.println("Bye. Hope to see you again soon!");
-        printBreak();
+    }
+    
+    public static void runChatLoop(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine();
+            printBreak();
+            
+            if (input.equals("bye")) {
+                System.out.println(" Bye! I hope I made your day SWEETER and hope to see you again soon:)");
+                printBreak();
+                break;
+            } else {
+                System.out.println(" " + input);
+                printBreak();
+            }
+        }
     }
     
     public static void printBreak() {
