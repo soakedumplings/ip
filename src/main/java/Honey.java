@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
 public class Honey {
-    private static String[] tasks = new String[100];
-    private static int taskCount = 0;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -29,30 +27,17 @@ public class Honey {
                 printBreak();
                 break;
             } else if (input.equals("list")) {
-                listTasks();
+                Task.listTasks();
+            } else if (input.startsWith("mark ")) {
+                Task.markTask(input);
+            } else if (input.startsWith("unmark ")) {
+                Task.unmarkTask(input);
             } else {
-                addTask(input);
+                Task.addTask(input);
             }
             printBreak();
         }
     }
-
-    public static void listTasks() {
-        if (taskCount == 0) {
-            System.out.println(" No tasks in your list!");
-        } else {
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println(" " + (i + 1) + ". " + tasks[i]);
-            }
-        }
-    }
-
-    public static void addTask(String task) {
-        tasks[taskCount] = task;
-        taskCount++;
-        System.out.println(" added: " + task);
-    }
-
     public static void printBreak() {
         System.out.println("____________________________________________________________");
     }
