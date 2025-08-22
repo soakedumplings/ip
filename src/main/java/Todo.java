@@ -1,6 +1,9 @@
 public class Todo extends Task {
-    public Todo(String description) {
+    public Todo(String description) throws EmptyDescriptionException {
         super(description);
+        if (description.trim().equals("todo") || description.length() <= 5) {
+            throw new EmptyDescriptionException("todo");
+        }
     }
 
     @Override

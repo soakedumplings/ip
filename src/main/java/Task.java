@@ -43,19 +43,21 @@ class Task {
         }
     }
 
-    public static void addTask(String description) {
-        taskCount++;
-        if (description.startsWith("todo ")) {
+    public static void addTask(String description) throws HoneyException {
+        if (description.startsWith("todo")) {
             Todo task = new Todo(description);
+            taskCount++;
             addToList(task);
-        } else if (description.startsWith("deadline ")) {
+        } else if (description.startsWith("deadline")) {
             Deadline task = new Deadline(description);
+            taskCount++;
             addToList(task);
-        } else if (description.startsWith("event ")) {
+        } else if (description.startsWith("event")) {
             Event task = new Event(description);
+            taskCount++;
             addToList(task);
         } else {
-            System.out.println(" Please specify type of Task- Todo, Deadline, Event.");
+            throw new InvalidCommandException(description);
         }
     }
 
@@ -66,35 +68,43 @@ class Task {
         System.out.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
-    public static void markTask(String input) {
+    public static void markTask(String input) throws HoneyException {
+        if (input.trim().equals("mark")) {
+            throw new InvalidNumberFormatException("mark", "no number provided");
+        }
+        
         try {
-            int taskNumber = Integer.parseInt(input.substring(5)) - 1;
+            int taskNumber = Integer.parseInt(input.substring(5).trim()) - 1;
             if (taskNumber >= 0 && taskNumber < taskCount) {
                 Task task = tasks[taskNumber];
                 task.markAsDone();
                 System.out.println(" Nice! I've marked this task as done:");
                 System.out.println("   " + task);
             } else {
-                System.out.println(" Task number out of range!");
+                throw new InvalidTaskNumberException("mark", taskCount);
             }
         } catch (NumberFormatException e) {
-            System.out.println(" Please provide a valid task number!");
+            throw new InvalidNumberFormatException("mark", input.substring(5).trim());
         }
     }
 
-    public static void unmarkTask(String input) {
+    public static void unmarkTask(String input) throws HoneyException {
+        if (input.trim().equals("unmark")) {
+            throw new InvalidNumberFormatException("unmark", "no number provided");
+        }
+        
         try {
-            int taskNumber = Integer.parseInt(input.substring(7)) - 1;
+            int taskNumber = Integer.parseInt(input.substring(7).trim()) - 1;
             if (taskNumber >= 0 && taskNumber < taskCount) {
                 Task task = tasks[taskNumber];
                 task.markAsNotDone();
                 System.out.println(" OK, I've marked this task as not done yet:");
                 System.out.println("   " + task);
             } else {
-                System.out.println(" Task number out of range!");
+                throw new InvalidTaskNumberException("unmark", taskCount);
             }
         } catch (NumberFormatException e) {
-            System.out.println(" Please provide a valid task number!");
+            throw new InvalidNumberFormatException("unmark", input.substring(7).trim());
         }
     }
 

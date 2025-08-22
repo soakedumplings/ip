@@ -22,20 +22,24 @@ public class Honey {
             String input = scanner.nextLine();
             printBreak();
 
-            if (input.equals("bye")) {
-                System.out.println(" Bye! I hope I made your day SWEETER and hope to see you again soon:)");
-                printBreak();
-                break;
-            } else if (input.equals("list")) {
-                Task.listTasks();
-            } else if (input.startsWith("mark ")) {
-                Task.markTask(input);
-            } else if (input.startsWith("unmark ")) {
-                Task.unmarkTask(input);
-            } else if (input.startsWith("todo ") || input.startsWith("deadline") || input.startsWith("event")) {
-                Task.addTask(input);
-            } else {
-                System.out.println(" Please provide a valid command!");
+            try {
+                if (input.equals("bye")) {
+                    System.out.println(" Bye! I hope I made your day SWEETER and hope to see you again soon:)");
+                    printBreak();
+                    break;
+                } else if (input.equals("list")) {
+                    Task.listTasks();
+                } else if (input.startsWith("mark")) {
+                    Task.markTask(input);
+                } else if (input.startsWith("unmark")) {
+                    Task.unmarkTask(input);
+                } else if (input.startsWith("todo") || input.startsWith("deadline") || input.startsWith("event")) {
+                    Task.addTask(input);
+                } else {
+                    throw new InvalidCommandException(input);
+                }
+            } catch (HoneyException e) {
+                System.out.println(" " + e.getMessage());
             }
             printBreak();
         }
