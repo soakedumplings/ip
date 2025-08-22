@@ -3,18 +3,14 @@ import java.util.ArrayList;
 class Task {
     protected String description;
     protected boolean isDone;
-    protected boolean isTodo;
-    protected boolean isDeadline;
-    protected boolean isEvent;
+    protected TaskType type;
 
     private static final ArrayList<Task> tasks = new ArrayList<>();
 
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
         this.isDone = false;
-        this.isTodo = false;
-        this.isDeadline = false;
-        this.isEvent = false;
+        this.type = type;
     }
 
     public String getStatusIcon() {

@@ -3,7 +3,7 @@ public class Event extends Task {
     String taskName;
 
     public Event(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description);
+        super(description, TaskType.EVENT);
         
         if (description.trim().equals("event") || description.length() <= 6) {
             throw new EmptyDescriptionException("event");
@@ -33,6 +33,6 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E][" + getStatusIcon() + "] " + taskName + " " + duration;
+        return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " " + duration;
     }
 }

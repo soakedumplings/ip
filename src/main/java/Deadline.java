@@ -3,7 +3,7 @@ public class Deadline extends Task {
     String taskName;
 
     public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description);
+        super(description, TaskType.DEADLINE);
         
         if (description.trim().equals("deadline") || description.length() <= 9) {
             throw new EmptyDescriptionException("deadline");
@@ -28,6 +28,6 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D][" + getStatusIcon() + "] " + taskName + " " + deadline;
+        return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " " + deadline;
     }
 }
