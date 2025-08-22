@@ -32,8 +32,10 @@ public class Honey {
                 Task.markTask(input);
             } else if (input.startsWith("unmark ")) {
                 Task.unmarkTask(input);
-            } else {
+            } else if (input.startsWith("todo ") || input.startsWith("deadline") || input.startsWith("event")) {
                 Task.addTask(input);
+            } else {
+                System.out.println(" Please provide a valid command!");
             }
             printBreak();
         }

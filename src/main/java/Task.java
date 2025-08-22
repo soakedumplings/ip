@@ -1,12 +1,19 @@
 class Task {
     protected String description;
     protected boolean isDone;
+    protected boolean isTodo;
+    protected boolean isDeadline;
+    protected boolean isEvent;
+
     private static Task[] tasks = new Task[100];
     private static int taskCount = 0;
 
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+        this.isTodo = false;
+        this.isDeadline = false;
+        this.isEvent = false;
     }
 
     public String getStatusIcon() {
@@ -37,9 +44,26 @@ class Task {
     }
 
     public static void addTask(String description) {
-        tasks[taskCount] = new Task(description);
         taskCount++;
-        System.out.println(" added: " + description);
+        if (description.startsWith("todo ")) {
+            Todo task = new Todo(description);
+            addToList(task);
+        } else if (description.startsWith("deadline ")) {
+            Deadline task = new Deadline(description);
+            addToList(task);
+        } else if (description.startsWith("event ")) {
+            Event task = new Event(description);
+            addToList(task);
+        } else {
+            System.out.println(" Please specify type of Task- Todo, Deadline, Event.");
+        }
+    }
+
+    public static void addToList(Task task) {
+        tasks[taskCount - 1] = task;
+        System.out.println(" Got it. I've added this task:");
+        System.out.println("   " + task);
+        System.out.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
     public static void markTask(String input) {
@@ -74,8 +98,5 @@ class Task {
         }
     }
 
-    @Override
-    public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
-    }
 }
+
