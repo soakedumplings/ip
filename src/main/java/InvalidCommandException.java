@@ -8,6 +8,7 @@ public class InvalidCommandException extends HoneyException {
               "  • list - Show all tasks\n" +
               "  • mark [number] - Mark task as done\n" +
               "  • unmark [number] - Mark task as not done\n" +
+              "  • delete [number] - Delete a task\n" +
               "  • bye - Exit the program");
     }
 }

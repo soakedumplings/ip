@@ -1,24 +1,20 @@
 todo read book
-todo
-todo 
+todo write essay
 deadline submit report /by 2023-10-15
-deadline
-deadline 
-deadline submit report
 event team meeting /from 2023-10-20 /to 2023-10-21
-event
-event 
-event team meeting
-event team meeting /from 2023-10-20
+todo buy groceries
 list
+delete 3
+list
+delete
+delete abc
+delete 999
+todo
+deadline
+event
 mark 1
-mark
-mark abc
-mark 999
 unmark 1
-unmark
-unmark xyz
-unmark 999
+delete 1
+list
 blah
-unknown command
 bye

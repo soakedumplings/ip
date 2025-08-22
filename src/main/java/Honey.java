@@ -35,6 +35,8 @@ public class Honey {
                     Task.unmarkTask(input);
                 } else if (input.startsWith("todo") || input.startsWith("deadline") || input.startsWith("event")) {
                     Task.addTask(input);
+                } else if (input.startsWith("delete")) {
+                    Task.deleteTask(input);
                 } else {
                     throw new InvalidCommandException(input);
                 }

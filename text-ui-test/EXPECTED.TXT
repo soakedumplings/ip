@@ -8,101 +8,92 @@ ____________________________________________________________
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The description of a todo cannot be empty.
-Please provide a description like: todo read book
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The description of a todo cannot be empty.
-Please provide a description like: todo read book
+ Got it. I've added this task:
+   [T][ ] write essay
+ Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
  Got it. I've added this task:
    [D][ ] submit report (by: 2023-10-15)
- Now you have 2 tasks in the list.
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The description of a deadline cannot be empty.
-Please provide a description like: deadline submit report /by 2023-10-15
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The description of a deadline cannot be empty.
-Please provide a description like: deadline submit report /by 2023-10-15
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The deadline format is incorrect!
-Please use: deadline [description] /by [date]
-Example: deadline submit report /by 2023-10-15
+ Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
  Got it. I've added this task:
    [E][ ] team meeting (from: 2023-10-20 to: 2023-10-21)
- Now you have 3 tasks in the list.
+ Now you have 4 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The description of a event cannot be empty.
-Please provide a description like: event team meeting /from 2023-10-20 /to 2023-10-21
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The description of a event cannot be empty.
-Please provide a description like: event team meeting /from 2023-10-20 /to 2023-10-21
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The event format is incorrect!
-Please use: event [description] /from [start] /to [end]
-Example: event team meeting /from 2023-10-20 /to 2023-10-21
-____________________________________________________________
-____________________________________________________________
- OOPS!!! The event format is incorrect!
-Please use: event [description] /from [start] /to [end]
-Example: event team meeting /from 2023-10-20 /to 2023-10-21
+ Got it. I've added this task:
+   [T][ ] buy groceries
+ Now you have 5 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
  1. [T][ ] read book
- 2. [D][ ] submit report (by: 2023-10-15)
+ 2. [T][ ] write essay
+ 3. [D][ ] submit report (by: 2023-10-15)
+ 4. [E][ ] team meeting (from: 2023-10-20 to: 2023-10-21)
+ 5. [T][ ] buy groceries
+____________________________________________________________
+____________________________________________________________
+ Noted. I've removed this task:
+   [D][ ] submit report (by: 2023-10-15)
+ Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1. [T][ ] read book
+ 2. [T][ ] write essay
  3. [E][ ] team meeting (from: 2023-10-20 to: 2023-10-21)
+ 4. [T][ ] buy groceries
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! I need a valid number to delete a task!
+You provided: 'no number provided'
+Please use: delete [number]
+Example: delete 1
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! I need a valid number to delete a task!
+You provided: 'abc'
+Please use: delete [number]
+Example: delete 1
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! I can't delete that task!
+Please provide a valid task number between 1 and 4.
+Use 'list' to see all your tasks with their numbers.
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The description of a todo cannot be empty.
+Please provide a description like: todo read book
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The description of a deadline cannot be empty.
+Please provide a description like: deadline submit report /by 2023-10-15
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The description of a event cannot be empty.
+Please provide a description like: event team meeting /from 2023-10-20 /to 2023-10-21
 ____________________________________________________________
 ____________________________________________________________
  Nice! I've marked this task as done:
    [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! I need a valid number to mark a task!
-You provided: 'no number provided'
-Please use: mark [number]
-Example: mark 1
-____________________________________________________________
-____________________________________________________________
- OOPS!!! I need a valid number to mark a task!
-You provided: 'abc'
-Please use: mark [number]
-Example: mark 1
-____________________________________________________________
-____________________________________________________________
- OOPS!!! I can't mark that task!
-Please provide a valid task number between 1 and 3.
-Use 'list' to see all your tasks with their numbers.
-____________________________________________________________
-____________________________________________________________
  OK, I've marked this task as not done yet:
    [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! I need a valid number to unmark a task!
-You provided: 'no number provided'
-Please use: unmark [number]
-Example: unmark 1
+ Noted. I've removed this task:
+   [T][ ] read book
+ Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! I need a valid number to unmark a task!
-You provided: 'xyz'
-Please use: unmark [number]
-Example: unmark 1
-____________________________________________________________
-____________________________________________________________
- OOPS!!! I can't unmark that task!
-Please provide a valid task number between 1 and 3.
-Use 'list' to see all your tasks with their numbers.
+ Here are the tasks in your list:
+ 1. [T][ ] write essay
+ 2. [E][ ] team meeting (from: 2023-10-20 to: 2023-10-21)
+ 3. [T][ ] buy groceries
 ____________________________________________________________
 ____________________________________________________________
  OOPS!!! I'm sorry, but I don't know what 'blah' means :(
@@ -113,17 +104,7 @@ Here are the commands I understand:
   • list - Show all tasks
   • mark [number] - Mark task as done
   • unmark [number] - Mark task as not done
-  • bye - Exit the program
-____________________________________________________________
-____________________________________________________________
- OOPS!!! I'm sorry, but I don't know what 'unknown command' means :(
-Here are the commands I understand:
-  • todo [description] - Add a todo task
-  • deadline [description] /by [date] - Add a deadline task
-  • event [description] /from [start] /to [end] - Add an event task
-  • list - Show all tasks
-  • mark [number] - Mark task as done
-  • unmark [number] - Mark task as not done
+  • delete [number] - Delete a task
   • bye - Exit the program
 ____________________________________________________________
 ____________________________________________________________
