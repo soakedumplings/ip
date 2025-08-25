@@ -1,6 +1,6 @@
 public class Deadline extends Task {
-    String deadline;
-    String taskName;
+    public String deadline;
+    public String taskName;
 
     public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
         super(description, TaskType.DEADLINE);

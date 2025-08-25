@@ -5,6 +5,7 @@ public class Honey {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        Task.loadTasks();
         greeting();
         runChatLoop(scanner);
         scanner.close();

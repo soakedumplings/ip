@@ -4,17 +4,17 @@ deadline submit report /by 2023-10-15
 event team meeting /from 2023-10-20 /to 2023-10-21
 todo buy groceries
 list
-delete 3
+mark 1
+mark 3
 list
+delete 2
+list
+unmark 1
 delete
 delete abc
 delete 999
 todo
 deadline
 event
-mark 1
-unmark 1
-delete 1
-list
 blah
 bye

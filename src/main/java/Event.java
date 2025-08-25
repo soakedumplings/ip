@@ -1,6 +1,6 @@
 public class Event extends Task {
-    String duration;
-    String taskName;
+    public String duration;
+    public String taskName;
 
     public Event(String description) throws EmptyDescriptionException, InvalidDateFormatException {
         super(description, TaskType.EVENT);
