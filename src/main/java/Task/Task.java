@@ -1,6 +1,18 @@
+package Task;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-class Task {
+import Exceptions.HoneyException;
+import Exceptions.InvalidCommandException;
+import Exceptions.InvalidDateFormatException;
+import Exceptions.InvalidNumberFormatException;
+import Exceptions.InvalidTaskNumberException;
+import Storage.Storage;
+
+public class Task {
     protected String description;
     protected boolean isDone;
     protected TaskType type;
@@ -36,6 +48,14 @@ class Task {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public TaskType getType() {
+        return this.type;
+    }
+
+    public boolean getIsDone() {
+        return this.isDone;
     }
 
     public static void listTasks() {
@@ -133,6 +153,50 @@ class Task {
             }
         } catch (NumberFormatException e) {
             throw new InvalidNumberFormatException("delete", input.substring(7).trim());
+        }
+    }
+
+    public static void findTasksDue(String input) throws HoneyException {
+        if (input.trim().equals("due")) {
+            throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
+        }
+        
+        String dateStr = input.substring(4).trim();
+        LocalDate queryDate;
+        
+        try {
+            queryDate = LocalDate.parse(dateStr);
+        } catch (DateTimeParseException e) {
+            throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
+        }
+        
+        ArrayList<Task> dueTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                Deadline deadline = (Deadline) task;
+                LocalDate deadlineDate = deadline.deadline.toLocalDate();
+                if (deadlineDate.equals(queryDate)) {
+                    dueTasks.add(task);
+                }
+            } else if (task instanceof Event) {
+                Event event = (Event) task;
+                if ((event.startDate.equals(queryDate)) || 
+                    (event.endDate.equals(queryDate)) ||
+                    (queryDate.isAfter(event.startDate) && queryDate.isBefore(event.endDate))) {
+                    dueTasks.add(task);
+                }
+            }
+        }
+        
+        if (dueTasks.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+            System.out.println(" No tasks due on " + queryDate.format(formatter) + "!");
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+            System.out.println(" Here are the tasks due on " + queryDate.format(formatter) + ":");
+            for (int i = 0; i < dueTasks.size(); i++) {
+                System.out.println(" " + (i+1) + ". " + dueTasks.get(i).toString());
+            }
         }
     }
 

@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class InvalidCommandException extends HoneyException {
     public InvalidCommandException(String command) {
         super("OOPS!!! I'm sorry, but I don't know what '" + command + "' means :(\n" +

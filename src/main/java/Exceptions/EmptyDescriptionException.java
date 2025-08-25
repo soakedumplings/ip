@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class EmptyDescriptionException extends HoneyException {
     public EmptyDescriptionException(String taskType) {
         super("OOPS!!! The description of a " + taskType + " cannot be empty.\n" +

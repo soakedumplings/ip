@@ -1,4 +1,9 @@
+import Exceptions.HoneyException;
+import Exceptions.InvalidCommandException;
+
 import java.util.Scanner;
+
+import Task.Task;
 
 public class Honey {
 
@@ -38,6 +43,8 @@ public class Honey {
                     Task.addTask(input);
                 } else if (input.startsWith("delete")) {
                     Task.deleteTask(input);
+                } else if (input.startsWith("due")) {
+                    Task.findTasksDue(input);
                 } else {
                     throw new InvalidCommandException(input);
                 }

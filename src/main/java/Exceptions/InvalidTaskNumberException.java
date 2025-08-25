@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class InvalidTaskNumberException extends HoneyException {
     public InvalidTaskNumberException(String operation, int maxTasks) {
         super("OOPS!!! I can't " + operation + " that task!\n" +

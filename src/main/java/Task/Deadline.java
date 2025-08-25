@@ -1,0 +1,86 @@
+package Task;
+
+import Exceptions.EmptyDescriptionException;
+import Exceptions.InvalidDateFormatException;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class Deadline extends Task {
+    public LocalDateTime deadline;  // Changed to LocalDateTime to support time
+    public String taskName;
+    
+    // Input formats we'll try
+    private static final DateTimeFormatter[] INPUT_FORMATS = {
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),    // 2019-12-02 1800
+        DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),      // 2/12/2019 1800
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),   // 2019-12-02 18:00
+        DateTimeFormatter.ofPattern("yyyy-MM-dd")          // 2019-12-02 (date only)
+    };
+    
+    // User-friendly output formats
+    private static final DateTimeFormatter DATE_OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    private static final DateTimeFormatter DATETIME_OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+
+    public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
+        super(description, TaskType.DEADLINE);
+        
+        if (description.trim().equals("deadline") || description.length() <= 9) {
+            throw new EmptyDescriptionException("deadline");
+        }
+        
+        if (!description.contains("/by ")) {
+            throw new InvalidDateFormatException("deadline", "deadline [description] /by [date]");
+        }
+        
+        String[] tokens = description.split(" /by ");
+        if (tokens.length != 2 || tokens[1].trim().isEmpty()) {
+            throw new InvalidDateFormatException("deadline", "deadline [description] /by [date]");
+        }
+        
+        this.taskName = tokens[0].substring(9).trim();
+        if (this.taskName.isEmpty()) {
+            throw new EmptyDescriptionException("deadline");
+        }
+        
+        // Parse date/time using multiple formats
+        String dateTimeInput = tokens[1].trim();
+        this.deadline = null;
+        
+        for (DateTimeFormatter formatter : INPUT_FORMATS) {
+            try {
+                if (dateTimeInput.matches(".*\\d{4}$") || dateTimeInput.matches(".*\\d{2}:\\d{2}$")) {
+                    // Contains time (either HHmm or HH:mm format)
+                    this.deadline = LocalDateTime.parse(dateTimeInput, formatter);
+                } else {
+                    // Date-only format, set time to start of day
+                    this.deadline = LocalDate.parse(dateTimeInput, formatter).atStartOfDay();
+                }
+                break;
+            } catch (DateTimeParseException e) {
+                // Try next format
+            }
+        }
+        
+        if (this.deadline == null) {
+            throw new InvalidDateFormatException("deadline", 
+                "Please use date formats: yyyy-MM-dd, yyyy-MM-dd HHmm, d/M/yyyy HHmm, or yyyy-MM-dd HH:mm");
+        }
+    }
+
+    @Override
+    public String toString() {
+        // Check if time component is present (not midnight)
+        if (deadline.getHour() == 0 && deadline.getMinute() == 0) {
+            // Date only - format as "MMM dd yyyy"
+            String formattedDate = deadline.format(DATE_OUTPUT);
+            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDate + ")";
+        } else {
+            // Date and time - format as "MMM dd yyyy, h:mma"
+            String formattedDateTime = deadline.format(DATETIME_OUTPUT);
+            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDateTime + ")";
+        }
+    }
+}

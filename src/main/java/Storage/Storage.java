@@ -1,5 +1,20 @@
-import java.io.*;
-import java.nio.file.*;
+package Storage;
+
+import Exceptions.HoneyException;
+import Task.Task;
+import Task.Todo;
+import Task.Deadline;
+import Task.Event;
+import Task.TaskType;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.ArrayList;
 
 public class Storage {
@@ -56,19 +71,19 @@ public class Storage {
     
     private static String taskToFileFormat(Task task) { // from user interface to saved file
         StringBuilder sb = new StringBuilder();
-        sb.append(task.type.toString()).append(" | ");
-        sb.append(task.isDone ? "1" : "0").append(" | ");
+        sb.append(task.getType().toString()).append(" | ");
+        sb.append(task.getIsDone() ? "1" : "0").append(" | ");
         
         if (task instanceof Todo) {
-            sb.append(task.description.substring(5));
+            sb.append(task.getDescription().substring(5));
         } else if (task instanceof Deadline) {
             Deadline deadline = (Deadline) task;
             sb.append(deadline.taskName).append(" | ");
-            sb.append(deadline.deadline.substring(5, deadline.deadline.length() - 1)); // Remove "(by: " and ")"
+            sb.append(deadline.deadline.toString()); // Store as ISO format: yyyy-MM-ddTHH:mm
         } else if (task instanceof Event) {
             Event event = (Event) task;
             sb.append(event.taskName).append(" | ");
-            sb.append(event.duration.substring(7, event.duration.length() - 1)); // Remove "(from: " and ")"
+            sb.append(event.startDate.toString()).append(" to ").append(event.endDate.toString());
         }
         
         return sb.toString();
@@ -101,15 +116,25 @@ public class Storage {
             if (parts.length != 4) {
                 throw new RuntimeException("Invalid DEADLINE format");
             }
-            task = new Deadline("deadline " + parts[2].trim() + " /by " + parts[3].trim());
+            // Parse stored ISO datetime format (yyyy-MM-ddTHH:mm or yyyy-MM-dd)
+            String storedDateTime = parts[3].trim();
+            if (storedDateTime.contains("T")) {
+                // Has time component, convert back to our input format
+                storedDateTime = storedDateTime.replace("T", " ").replace(":", "");
+                // Remove seconds if present
+                if (storedDateTime.length() > 15) {
+                    storedDateTime = storedDateTime.substring(0, 15);
+                }
+            }
+            task = new Deadline("deadline " + parts[2].trim() + " /by " + storedDateTime);
             break;
 
         case "E":
             if (parts.length != 4) {
                 throw new RuntimeException("Invalid EVENT format");
             }
-            // Parse "start to: end" format
-            String[] timeParts = parts[3].trim().split(" to: ");
+            // Parse "start to end" format (both in ISO format)
+            String[] timeParts = parts[3].trim().split(" to ");
             if (timeParts.length != 2) {
                 throw new RuntimeException("Invalid EVENT time format");
             }
