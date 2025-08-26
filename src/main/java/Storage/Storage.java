@@ -5,7 +5,6 @@ import Task.Task;
 import Task.Todo;
 import Task.Deadline;
 import Task.Event;
-import Task.TaskType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,19 +17,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Storage {
-    private static final Path DATA_DIR_PATH = Paths.get("data");
-    private static final Path DATA_FILE_PATH = Paths.get("data", "honey.txt");
+    private final Path dataFilePath;
+    private final Path dataDirPath;
     
-    public static void saveTasks(ArrayList<Task> tasks) {
+    public Storage(String filePath) {
+        this.dataFilePath = Paths.get(filePath);
+        this.dataDirPath = this.dataFilePath.getParent();
+    }
+    
+    public void saveTasks(ArrayList<Task> tasks) {
         try {
             // Create directory if it doesn't exist
-            Path dataDir = DATA_DIR_PATH;
-            if (!Files.exists(dataDir)) {
-                Files.createDirectories(dataDir);
+            if (dataDirPath != null && !Files.exists(dataDirPath)) {
+                Files.createDirectories(dataDirPath);
             }
             
             // Write tasks to file
-            try (BufferedWriter writer = Files.newBufferedWriter(DATA_FILE_PATH)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(dataFilePath)) {
                 for (Task task : tasks) {
                     writer.write(taskToFileFormat(task));
                     writer.newLine();
@@ -41,16 +44,15 @@ public class Storage {
         }
     }
     
-    public static ArrayList<Task> loadTasks() {
+    public ArrayList<Task> load() throws HoneyException {
         ArrayList<Task> tasks = new ArrayList<>();
-        Path dataFile = DATA_FILE_PATH;
         
         // Return empty list if file doesn't exist
-        if (!Files.exists(dataFile)) {
+        if (!Files.exists(dataFilePath)) {
             return tasks;
         }
         
-        try (BufferedReader reader = Files.newBufferedReader(dataFile)) {
+        try (BufferedReader reader = Files.newBufferedReader(dataFilePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
@@ -69,7 +71,7 @@ public class Storage {
         return tasks;
     }
     
-    private static String taskToFileFormat(Task task) { // from user interface to saved file
+    private String taskToFileFormat(Task task) { // from user interface to saved file
         StringBuilder sb = new StringBuilder();
         sb.append(task.getType().toString()).append(" | ");
         sb.append(task.getIsDone() ? "1" : "0").append(" | ");
@@ -89,7 +91,7 @@ public class Storage {
         return sb.toString();
     }
     
-    private static Task parseTaskFromFile(String line) throws HoneyException { // from saved file to user interface
+    private Task parseTaskFromFile(String line) throws HoneyException { // from saved file to user interface
         if (line.isEmpty()) {
             return null;
         }

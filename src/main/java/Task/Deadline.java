@@ -65,7 +65,7 @@ public class Deadline extends Task {
         }
         
         if (this.deadline == null) {
-            throw new InvalidDateFormatException("deadline", 
+            throw new InvalidDateFormatException("deadline",
                 "Please use date formats: yyyy-MM-dd, yyyy-MM-dd HHmm, d/M/yyyy HHmm, or yyyy-MM-dd HH:mm");
         }
     }

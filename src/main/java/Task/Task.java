@@ -1,32 +1,11 @@
 package Task;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-
-import Exceptions.HoneyException;
-import Exceptions.InvalidCommandException;
-import Exceptions.InvalidDateFormatException;
-import Exceptions.InvalidNumberFormatException;
-import Exceptions.InvalidTaskNumberException;
-import Storage.Storage;
 
 public class Task {
     protected String description;
     protected boolean isDone;
     protected TaskType type;
 
-    private static final ArrayList<Task> tasks = new ArrayList<>();
-    
-    public static void loadTasks() {
-        tasks.clear();
-        tasks.addAll(Storage.loadTasks());
-    }
-    
-    private static void saveTasks() {
-        Storage.saveTasks(tasks);
-    }
 
     public Task(String description, TaskType type) {
         this.description = description;
@@ -58,147 +37,6 @@ public class Task {
         return this.isDone;
     }
 
-    public static void listTasks() {
-        if (tasks.isEmpty()) {
-            System.out.println(" No tasks in your list!");
-        } else {
-            System.out.println(" Here are the tasks in your list:");
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println(" " + (i+1) + ". " + tasks.get(i).toString());
-            }
-        }
-    }
-
-    public static void addTask(String description) throws HoneyException {
-        if (description.startsWith("todo")) {
-            Todo task = new Todo(description);
-            addToList(task);
-        } else if (description.startsWith("deadline")) {
-            Deadline task = new Deadline(description);
-            addToList(task);
-        } else if (description.startsWith("event")) {
-            Event task = new Event(description);
-            addToList(task);
-        } else {
-            throw new InvalidCommandException(description);
-        }
-    }
-
-    public static void addToList(Task task) {
-        tasks.add(task);
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-        saveTasks();
-    }
-
-    public static void markTask(String input) throws HoneyException {
-        if (input.trim().equals("mark")) {
-            throw new InvalidNumberFormatException("mark", "no number provided");
-        }
-        
-        try {
-            int taskNumber = Integer.parseInt(input.substring(5).trim()) - 1;
-            if (taskNumber >= 0 && taskNumber < tasks.size()) {
-                Task task = tasks.get(taskNumber);
-                task.markAsDone();
-                System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   " + task);
-                saveTasks();
-            } else {
-                throw new InvalidTaskNumberException("mark", tasks.size());
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidNumberFormatException("mark", input.substring(5).trim());
-        }
-    }
-
-    public static void unmarkTask(String input) throws HoneyException {
-        if (input.trim().equals("unmark")) {
-            throw new InvalidNumberFormatException("unmark", "no number provided");
-        }
-        
-        try {
-            int taskNumber = Integer.parseInt(input.substring(7).trim()) - 1;
-            if (taskNumber >= 0 && taskNumber < tasks.size()) {
-                Task task = tasks.get(taskNumber);
-                task.markAsNotDone();
-                System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + task);
-                saveTasks();
-            } else {
-                throw new InvalidTaskNumberException("unmark", tasks.size());
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidNumberFormatException("unmark", input.substring(7).trim());
-        }
-    }
-
-    public static void deleteTask(String input) throws HoneyException {
-        if (input.trim().equals("delete")) {
-            throw new InvalidNumberFormatException("delete", "no number provided");
-        }
-
-        try {
-            int taskNumber = Integer.parseInt(input.substring(7).trim()) - 1;
-            if (taskNumber >= 0 && taskNumber < tasks.size()) {
-                Task task = tasks.get(taskNumber);
-                tasks.remove(taskNumber);
-                System.out.println(" Noted. I've removed this task:");
-                System.out.println("   " + task);
-                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                saveTasks();
-            } else {
-                throw new InvalidTaskNumberException("delete", tasks.size());
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidNumberFormatException("delete", input.substring(7).trim());
-        }
-    }
-
-    public static void findTasksDue(String input) throws HoneyException {
-        if (input.trim().equals("due")) {
-            throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
-        }
-        
-        String dateStr = input.substring(4).trim();
-        LocalDate queryDate;
-        
-        try {
-            queryDate = LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
-            throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
-        }
-        
-        ArrayList<Task> dueTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                Deadline deadline = (Deadline) task;
-                LocalDate deadlineDate = deadline.deadline.toLocalDate();
-                if (deadlineDate.equals(queryDate)) {
-                    dueTasks.add(task);
-                }
-            } else if (task instanceof Event) {
-                Event event = (Event) task;
-                if ((event.startDate.equals(queryDate)) || 
-                    (event.endDate.equals(queryDate)) ||
-                    (queryDate.isAfter(event.startDate) && queryDate.isBefore(event.endDate))) {
-                    dueTasks.add(task);
-                }
-            }
-        }
-        
-        if (dueTasks.isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
-            System.out.println(" No tasks due on " + queryDate.format(formatter) + "!");
-        } else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
-            System.out.println(" Here are the tasks due on " + queryDate.format(formatter) + ":");
-            for (int i = 0; i < dueTasks.size(); i++) {
-                System.out.println(" " + (i+1) + ". " + dueTasks.get(i).toString());
-            }
-        }
-    }
 
 }
 

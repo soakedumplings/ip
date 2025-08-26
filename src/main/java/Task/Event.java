@@ -46,7 +46,7 @@ public class Event extends Task {
             this.startDate = LocalDate.parse(tokens[0].trim());
             this.endDate = LocalDate.parse(tokens[1].trim());
         } catch (DateTimeParseException e) {
-            throw new InvalidDateFormatException("event", 
+            throw new InvalidDateFormatException("event",
                 "Please use date format: yyyy-MM-dd (e.g., 2019-12-02)");
         }
         
