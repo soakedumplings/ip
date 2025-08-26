@@ -1,7 +1,7 @@
-package Task;
+package task;
 
-import Exceptions.EmptyDescriptionException;
-import Exceptions.InvalidDateFormatException;
+import honey.exceptions.EmptyDescriptionException;
+import honey.exceptions.InvalidDateFormatException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

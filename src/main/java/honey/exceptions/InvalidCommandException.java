@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class InvalidCommandException extends HoneyException {
     public InvalidCommandException(String command) {

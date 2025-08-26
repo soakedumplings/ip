@@ -1,17 +1,17 @@
-package Parser;
+package honey.parser;
 
-import Exceptions.HoneyException;
-import Exceptions.InvalidCommandException;
-import Exceptions.InvalidDateFormatException;
-import Exceptions.InvalidNumberFormatException;
-import Command.Command;
-import Command.ExitCommand;
-import Command.ListCommand;
-import Command.AddCommand;
-import Command.MarkCommand;
-import Command.UnmarkCommand;
-import Command.DeleteCommand;
-import Command.DueCommand;
+import honey.exceptions.HoneyException;
+import honey.exceptions.InvalidCommandException;
+import honey.exceptions.InvalidDateFormatException;
+import honey.exceptions.InvalidNumberFormatException;
+import honey.command.Command;
+import honey.command.ExitCommand;
+import honey.command.ListCommand;
+import honey.command.AddCommand;
+import honey.command.MarkCommand;
+import honey.command.UnmarkCommand;
+import honey.command.DeleteCommand;
+import honey.command.DueCommand;
 
 import java.util.Map;
 import java.util.Optional;

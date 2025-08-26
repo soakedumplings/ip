@@ -1,6 +1,6 @@
-package Task;
+package task;
 
-import Exceptions.EmptyDescriptionException;
+import honey.exceptions.EmptyDescriptionException;
 
 public class Todo extends Task {
     public Todo(String description) throws EmptyDescriptionException {

@@ -1,9 +1,9 @@
-package Command;
+package honey.command;
 
-import Exceptions.HoneyException;
-import Storage.Storage;
-import TaskList.TaskList;
-import Ui.Ui;
+import honey.exceptions.HoneyException;
+import honey.storage.Storage;
+import honey.tasklist.TaskList;
+import honey.ui.Ui;
 
 public class ExitCommand extends Command {
     

@@ -1,4 +1,4 @@
-package Parser;
+package honey.parser;
 
 public enum CommandType {
     EXIT,

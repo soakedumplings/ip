@@ -1,10 +1,10 @@
-package Command;
+package honey.command;
 
-import Exceptions.HoneyException;
-import Parser.Parser;
-import Storage.Storage;
-import TaskList.TaskList;
-import Ui.Ui;
+import honey.exceptions.HoneyException;
+import honey.parser.Parser;
+import honey.storage.Storage;
+import honey.tasklist.TaskList;
+import honey.ui.Ui;
 
 public class MarkCommand extends Command {
     

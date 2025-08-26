@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class InvalidTaskNumberException extends HoneyException {
     public InvalidTaskNumberException(String operation, int maxTasks) {

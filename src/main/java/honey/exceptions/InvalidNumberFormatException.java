@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class InvalidNumberFormatException extends HoneyException {
     public InvalidNumberFormatException(String operation, String providedInput) {

@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class InvalidDateFormatException extends HoneyException {
     public InvalidDateFormatException(String taskType, String expectedFormat) {

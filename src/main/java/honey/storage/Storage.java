@@ -1,10 +1,10 @@
-package Storage;
+package honey.storage;
 
-import Exceptions.HoneyException;
-import Task.Task;
-import Task.Todo;
-import Task.Deadline;
-import Task.Event;
+import honey.exceptions.HoneyException;
+import task.Task;
+import task.Todo;
+import task.Deadline;
+import task.Event;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

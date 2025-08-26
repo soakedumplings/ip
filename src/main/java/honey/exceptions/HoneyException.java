@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class HoneyException extends Exception {
     public HoneyException(String message) {

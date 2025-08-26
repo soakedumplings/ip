@@ -1,4 +1,4 @@
-package Exceptions;
+package honey.exceptions;
 
 public class EmptyDescriptionException extends HoneyException {
     public EmptyDescriptionException(String taskType) {
