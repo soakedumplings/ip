@@ -12,8 +12,8 @@ import honey.exceptions.HoneyException;
 import honey.storage.Storage;
 import honey.tasklist.TaskList;
 import honey.ui.Ui;
-import task.Task;
-import task.Todo;
+import honey.task.Task;
+import honey.task.Todo;
 
 public class CommandTest {
     private TaskList taskList;

@@ -1,10 +1,13 @@
 package task;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 import honey.exceptions.EmptyDescriptionException;
 import honey.exceptions.InvalidDateFormatException;
+import honey.task.Event;
+import honey.task.TaskType;
 
 public class EventTest {
     

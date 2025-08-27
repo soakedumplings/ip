@@ -1,7 +1,11 @@
-package task;
+package honey.task;
 
 import honey.exceptions.EmptyDescriptionException;
 
+/**
+ * Represents a simple todo task.
+ * A todo task only has a description and completion status.
+ */
 public class Todo extends Task {
     public Todo(String description) throws EmptyDescriptionException {
         super(description, TaskType.TODO);
