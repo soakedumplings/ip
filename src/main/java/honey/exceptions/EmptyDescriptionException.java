@@ -1,11 +1,26 @@
 package honey.exceptions;
 
+/**
+ * Exception thrown when a task is created with an empty description.
+ * Provides helpful examples for different task types.
+ */
 public class EmptyDescriptionException extends HoneyException {
+    /**
+     * Constructs an EmptyDescriptionException for the specified task type.
+     *
+     * @param taskType Type of task that has empty description.
+     */
     public EmptyDescriptionException(String taskType) {
         super("OOPS!!! The description of a " + taskType + " cannot be empty.\n" +
               "Please provide a description like: " + getExample(taskType));
     }
     
+    /**
+     * Returns an example command for the specified task type.
+     *
+     * @param taskType Type of task to get example for.
+     * @return Example command string.
+     */
     private static String getExample(String taskType) {
         switch (taskType.toLowerCase()) {
             case "todo":

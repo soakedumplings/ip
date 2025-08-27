@@ -8,8 +8,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a deadline task with a due date and optional time.
+ * A deadline task has a description and a deadline by which it should be completed.
+ */
 public class Deadline extends Task {
-    public LocalDateTime deadline;  // Changed to LocalDateTime to support time
+    /** Deadline date and time for this task */
+    public LocalDateTime deadline;
+    /** Name of the deadline task */
     public String taskName;
     
     // Input formats we'll try
@@ -24,6 +30,14 @@ public class Deadline extends Task {
     private static final DateTimeFormatter DATE_OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy");
     private static final DateTimeFormatter DATETIME_OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
 
+    /**
+     * Constructs a new deadline task with the specified description.
+     * Parses the deadline date/time from the description.
+     *
+     * @param description Full command string including "deadline" prefix and "/by" clause.
+     * @throws EmptyDescriptionException If the deadline description is empty.
+     * @throws InvalidDateFormatException If the date format is invalid.
+     */
     public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
         super(description, TaskType.DEADLINE);
         
@@ -70,6 +84,12 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Returns the string representation of this deadline task.
+     * Format: [D][status] taskName (by: formattedDateTime)
+     *
+     * @return String representation of the deadline task.
+     */
     @Override
     public String toString() {
         // Check if time component is present (not midnight)

@@ -16,6 +16,10 @@ import honey.command.DueCommand;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Parses user input and creates appropriate Command objects.
+ * Handles command recognition and parameter extraction for the Honey application.
+ */
 public class Parser {
     private static final Map<String, CommandType> EXACT_COMMANDS = Map.of(
             "bye", CommandType.EXIT,
@@ -41,6 +45,13 @@ public class Parser {
             CommandType.DUE, DueCommand::new
     );
 
+    /**
+     * Determines the command type from user input.
+     * Recognizes both exact commands and prefix commands.
+     *
+     * @param input User input string.
+     * @return CommandType representing the parsed command.
+     */
     public static CommandType getCommandType(String input) {
         String command = input.trim().toLowerCase();
 
@@ -49,6 +60,13 @@ public class Parser {
                 .orElse(CommandType.UNKNOWN);
     }
 
+    /**
+     * Finds commands that start with a specific prefix.
+     * Used for commands that take parameters like "mark 1" or "todo read book".
+     *
+     * @param command Command string to search.
+     * @return Optional CommandType if a prefix match is found.
+     */
     private static Optional<CommandType> findPrefixCommand(String command) {
         return PREFIX_COMMANDS.entrySet().stream()
                 .filter(entry -> command.startsWith(entry.getKey() + " "))
@@ -56,6 +74,13 @@ public class Parser {
                 .findFirst();
     }
 
+    /**
+     * Parses user input and creates the appropriate Command object.
+     *
+     * @param input User input string.
+     * @return Command object representing the user's intent.
+     * @throws HoneyException If the command is invalid or cannot be parsed.
+     */
     public static Command parse(String input) throws HoneyException {
         CommandType commandType = getCommandType(input);
 
@@ -70,12 +95,28 @@ public class Parser {
         return COMMAND_FACTORIES.get(commandType).create(input);
     }
 
+    /**
+     * Checks if the command type represents an add command.
+     * Add commands include TODO, DEADLINE, and EVENT.
+     *
+     * @param type CommandType to check.
+     * @return True if it's an add command, false otherwise.
+     */
     private static boolean isAddCommand(CommandType type) {
         return type == CommandType.TODO ||
                 type == CommandType.DEADLINE ||
                 type == CommandType.EVENT;
     }
 
+    /**
+     * Parses the task number from a command string.
+     * Used for commands like "mark 1", "delete 2", etc.
+     *
+     * @param input Full command string.
+     * @param commandWord Command word to extract number after.
+     * @return Task number as integer.
+     * @throws HoneyException If the number format is invalid.
+     */
     public static int parseTaskNumber(String input, String commandWord) throws HoneyException {
         String numberPart = extractAfterCommand(input, commandWord);
 
@@ -90,6 +131,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the date from a "due" command.
+     *
+     * @param input Full command string starting with "due".
+     * @return Date string extracted from the command.
+     * @throws HoneyException If the date format is invalid.
+     */
     public static String parseDueDate(String input) throws HoneyException {
         String datePart = extractAfterCommand(input, "due");
 
@@ -100,6 +148,14 @@ public class Parser {
         return datePart;
     }
 
+    /**
+     * Extracts the substring after a command word.
+     * Helper method for parsing command parameters.
+     *
+     * @param input Full input string.
+     * @param command Command word to extract after.
+     * @return Trimmed substring after the command word.
+     */
     private static String extractAfterCommand(String input, String command) {
         return input.substring(command.length()).trim();
     }

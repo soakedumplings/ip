@@ -7,14 +7,29 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents an event task with start and end dates.
+ * An event task has a description, start date, and end date.
+ */
 public class Event extends Task {
+    /** Start date of the event */
     public LocalDate startDate;
+    /** End date of the event */
     public LocalDate endDate;
+    /** Name of the event task */
     public String taskName;
     
     // User-friendly output format
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
+    /**
+     * Constructs a new event task with the specified description.
+     * Parses the start and end dates from the description.
+     *
+     * @param description Full command string including "event" prefix and "/from" and "/to" clauses.
+     * @throws EmptyDescriptionException If the event description is empty.
+     * @throws InvalidDateFormatException If the date format is invalid or start date is after end date.
+     */
     public Event(String description) throws EmptyDescriptionException, InvalidDateFormatException {
         super(description, TaskType.EVENT);
         
@@ -56,6 +71,12 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Returns the string representation of this event task.
+     * Format: [E][status] taskName (from: startDate to: endDate) or (on: date) for single-day events.
+     *
+     * @return String representation of the event task.
+     */
     @Override
     public String toString() {
         // Format dates in user-friendly way: "MMM dd yyyy"
