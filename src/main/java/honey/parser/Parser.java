@@ -4,79 +4,76 @@ import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
 import honey.exceptions.InvalidDateFormatException;
 import honey.exceptions.InvalidNumberFormatException;
-import honey.command.Command;
-import honey.command.ExitCommand;
-import honey.command.ListCommand;
-import honey.command.AddCommand;
-import honey.command.MarkCommand;
-import honey.command.UnmarkCommand;
-import honey.command.DeleteCommand;
-import honey.command.DueCommand;
+import honey.storage.Storage;
+import honey.tasklist.TaskList;
+import honey.ui.Ui;
 
-import java.util.Map;
-import java.util.Optional;
-
+/**
+ * Handles parsing and executing user commands directly.
+ * Simplified implementation without command pattern abstraction.
+ */
 public class Parser {
-    private static final Map<String, CommandType> EXACT_COMMANDS = Map.of(
-            "bye", CommandType.EXIT,
-            "list", CommandType.LIST
-    );
-
-    private static final Map<String, CommandType> PREFIX_COMMANDS = Map.of(
-            "mark", CommandType.MARK,
-            "unmark", CommandType.UNMARK,
-            "delete", CommandType.DELETE,
-            "todo", CommandType.TODO,
-            "deadline", CommandType.DEADLINE,
-            "event", CommandType.EVENT,
-            "due", CommandType.DUE
-    );
-
-    private static final Map<CommandType, CommandFactory> COMMAND_FACTORIES = Map.of(
-            CommandType.EXIT, ExitCommand::new,
-            CommandType.LIST, ListCommand::new,
-            CommandType.MARK, MarkCommand::new,
-            CommandType.UNMARK, UnmarkCommand::new,
-            CommandType.DELETE, DeleteCommand::new,
-            CommandType.DUE, DueCommand::new
-    );
-
-    public static CommandType getCommandType(String input) {
-        String command = input.trim().toLowerCase();
-
-        return Optional.ofNullable(EXACT_COMMANDS.get(command))
-                .or(() -> findPrefixCommand(command))
-                .orElse(CommandType.UNKNOWN);
-    }
-
-    private static Optional<CommandType> findPrefixCommand(String command) {
-        return PREFIX_COMMANDS.entrySet().stream()
-                .filter(entry -> command.startsWith(entry.getKey() + " "))
-                .map(Map.Entry::getValue)
-                .findFirst();
-    }
-
-    public static Command parse(String input) throws HoneyException {
-        CommandType commandType = getCommandType(input);
-
-        if (commandType == CommandType.UNKNOWN) {
-            throw new InvalidCommandException(input);
+    
+    /**
+     * Parses and executes a user command directly.
+     *
+     * @param input The user input string.
+     * @param tasks The task list to operate on.
+     * @param ui The user interface for output.
+     * @param storage The storage for saving changes.
+     * @return True if the command is an exit command, false otherwise.
+     * @throws HoneyException If the command is invalid or execution fails.
+     */
+    public static boolean executeCommand(String input, TaskList tasks, Ui ui, Storage storage) throws HoneyException {
+        String trimmed = input.trim();
+        
+        if (trimmed.equals("bye")) {
+            return true;
+        } else if (trimmed.equals("list")) {
+            tasks.listTasks();
+        } else if (trimmed.startsWith("mark ")) {
+            int taskNumber = parseTaskNumber(trimmed, "mark");
+            tasks.markTask(taskNumber);
+            storage.saveTasks(tasks.getTasks());
+        } else if (trimmed.startsWith("unmark ")) {
+            int taskNumber = parseTaskNumber(trimmed, "unmark");
+            tasks.unmarkTask(taskNumber);
+            storage.saveTasks(tasks.getTasks());
+        } else if (trimmed.startsWith("delete ")) {
+            int taskNumber = parseTaskNumber(trimmed, "delete");
+            tasks.deleteTask(taskNumber);
+            storage.saveTasks(tasks.getTasks());
+        } else if (trimmed.startsWith("todo ") || trimmed.startsWith("deadline ") || trimmed.startsWith("event ")) {
+            tasks.addTask(trimmed);
+            storage.saveTasks(tasks.getTasks());
+        } else if (trimmed.startsWith("due ")) {
+            String dateStr = extractAfterCommand(trimmed, "due");
+            if (dateStr.isEmpty()) {
+                throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
+            }
+            tasks.findTasksDue(dateStr);
+        } else if (trimmed.startsWith("find ")) {
+            String keyword = extractAfterCommand(trimmed, "find");
+            if (keyword.isEmpty()) {
+                throw new InvalidCommandException("Please provide a keyword to search for.\nUsage: find [keyword]");
+            }
+            tasks.findTasks(keyword);
+        } else {
+            throw new InvalidCommandException(trimmed);
         }
-
-        if (isAddCommand(commandType)) {
-            return new AddCommand(input);
-        }
-
-        return COMMAND_FACTORIES.get(commandType).create(input);
+        
+        return false;
     }
 
-    private static boolean isAddCommand(CommandType type) {
-        return type == CommandType.TODO ||
-                type == CommandType.DEADLINE ||
-                type == CommandType.EVENT;
-    }
-
-    public static int parseTaskNumber(String input, String commandWord) throws HoneyException {
+    /**
+     * Parses a task number from a command string.
+     *
+     * @param input The full command string.
+     * @param commandWord The command word (e.g., "mark", "delete").
+     * @return The parsed task number.
+     * @throws HoneyException If the number is invalid or missing.
+     */
+    private static int parseTaskNumber(String input, String commandWord) throws HoneyException {
         String numberPart = extractAfterCommand(input, commandWord);
 
         if (numberPart.isEmpty()) {
@@ -90,22 +87,14 @@ public class Parser {
         }
     }
 
-    public static String parseDueDate(String input) throws HoneyException {
-        String datePart = extractAfterCommand(input, "due");
-
-        if (datePart.isEmpty()) {
-            throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
-        }
-
-        return datePart;
-    }
-
+    /**
+     * Extracts the text after a command word.
+     *
+     * @param input The full input string.
+     * @param command The command word to remove.
+     * @return The text after the command word, trimmed.
+     */
     private static String extractAfterCommand(String input, String command) {
         return input.substring(command.length()).trim();
-    }
-
-    @FunctionalInterface
-    private interface CommandFactory {
-        Command create(String input) throws HoneyException;
     }
 }

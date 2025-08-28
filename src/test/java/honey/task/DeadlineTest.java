@@ -1,10 +1,11 @@
-package task;
+package honey.task;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import honey.exceptions.EmptyDescriptionException;
 import honey.exceptions.InvalidDateFormatException;
+import honey.task.Deadline;
 
 public class DeadlineTest {
     
@@ -12,7 +13,7 @@ public class DeadlineTest {
     public void testDeadlineCreation() throws Exception {
         Deadline deadline = new Deadline("deadline return book /by 2019-10-15");
         assertEquals("return book", deadline.taskName);
-        assertEquals(TaskType.DEADLINE, deadline.getType());
+        assertEquals("D", deadline.getType());
         assertFalse(deadline.getIsDone());
         assertTrue(deadline.toString().contains("return book"));
         assertTrue(deadline.toString().contains("Oct 15 2019"));

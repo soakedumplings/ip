@@ -1,4 +1,4 @@
-package task;
+package honey.task;
 
 import honey.exceptions.EmptyDescriptionException;
 import honey.exceptions.InvalidDateFormatException;
@@ -25,7 +25,7 @@ public class Deadline extends Task {
     private static final DateTimeFormatter DATETIME_OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
 
     public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description, TaskType.DEADLINE);
+        super(description, "D");
         
         if (description.trim().equals("deadline") || description.length() <= 9) {
             throw new EmptyDescriptionException("deadline");
@@ -76,11 +76,11 @@ public class Deadline extends Task {
         if (deadline.getHour() == 0 && deadline.getMinute() == 0) {
             // Date only - format as "MMM dd yyyy"
             String formattedDate = deadline.format(DATE_OUTPUT);
-            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDate + ")";
+            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDate + ")";
         } else {
             // Date and time - format as "MMM dd yyyy, h:mma"
             String formattedDateTime = deadline.format(DATETIME_OUTPUT);
-            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDateTime + ")";
+            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDateTime + ")";
         }
     }
 }

@@ -1,13 +1,12 @@
-package task;
+package honey.task;
 
 
 public class Task {
     protected String description;
     protected boolean isDone;
-    protected TaskType type;
+    protected String type;
 
-
-    public Task(String description, TaskType type) {
+    public Task(String description, String type) {
         this.description = description;
         this.isDone = false;
         this.type = type;
@@ -29,7 +28,7 @@ public class Task {
         return this.description;
     }
 
-    public TaskType getType() {
+    public String getType() {
         return this.type;
     }
 

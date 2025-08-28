@@ -1,9 +1,10 @@
-package task;
+package honey.task;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import honey.exceptions.EmptyDescriptionException;
+import honey.task.Todo;
 
 public class TodoTest {
     
@@ -11,7 +12,7 @@ public class TodoTest {
     public void testTodoCreation() throws EmptyDescriptionException {
         Todo todo = new Todo("todo read book");
         assertEquals("read book", todo.getDescription().substring(5));
-        assertEquals(TaskType.TODO, todo.getType());
+        assertEquals("T", todo.getType());
         assertFalse(todo.getIsDone());
         assertEquals(" ", todo.getStatusIcon());
     }

@@ -11,10 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 
-import task.Task;
-import task.Todo;
-import task.Deadline;
-import task.Event;
+import honey.task.Task;
+import honey.task.Todo;
+import honey.task.Deadline;
+import honey.task.Event;
 import honey.exceptions.HoneyException;
 
 public class StorageTest {

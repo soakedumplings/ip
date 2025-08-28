@@ -1,10 +1,11 @@
-package task;
+package honey.task;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import honey.exceptions.EmptyDescriptionException;
 import honey.exceptions.InvalidDateFormatException;
+import honey.task.Event;
 
 public class EventTest {
     
@@ -12,7 +13,7 @@ public class EventTest {
     public void testEventCreation() throws Exception {
         Event event = new Event("event project meeting /from 2019-10-15 /to 2019-10-16");
         assertEquals("project meeting", event.taskName);
-        assertEquals(TaskType.EVENT, event.getType());
+        assertEquals("E", event.getType());
         assertFalse(event.getIsDone());
         assertTrue(event.toString().contains("project meeting"));
         assertTrue(event.toString().contains("Oct 15 2019"));

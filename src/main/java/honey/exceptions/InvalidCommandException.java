@@ -8,6 +8,8 @@ public class InvalidCommandException extends HoneyException {
               "  • deadline [description] /by [date] - Add a deadline task\n" +
               "  • event [description] /from [start] /to [end] - Add an event task\n" +
               "  • list - Show all tasks\n" +
+              "  • find [keyword] - Find tasks containing keyword\n" +
+              "  • due [date] - Show tasks due on date\n" +
               "  • mark [number] - Mark task as done\n" +
               "  • unmark [number] - Mark task as not done\n" +
               "  • delete [number] - Delete a task\n" +

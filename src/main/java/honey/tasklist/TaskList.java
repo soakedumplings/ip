@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import task.Task;
-import task.Todo;
-import task.Deadline;
-import task.Event;
+import honey.task.Task;
+import honey.task.Todo;
+import honey.task.Deadline;
+import honey.task.Event;
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
 import honey.exceptions.InvalidTaskNumberException;
@@ -127,6 +127,51 @@ public class TaskList {
                 System.out.println(" " + (i+1) + ". " + dueTasks.get(i).toString());
             }
         }
+    }
+
+    /**
+     * Finds and displays tasks that contain the specified keyword in their description.
+     * The search is case-insensitive.
+     *
+     * @param keyword The keyword to search for in task descriptions.
+     */
+    public void findTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+        
+        for (Task task : tasks) {
+            String taskDescription = getTaskDisplayDescription(task).toLowerCase();
+            if (taskDescription.contains(lowerKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        
+        if (matchingTasks.isEmpty()) {
+            System.out.println(" No matching tasks found!");
+        } else {
+            System.out.println(" Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println(" " + (i + 1) + "." + matchingTasks.get(i).toString());
+            }
+        }
+    }
+
+    /**
+     * Gets the display description of a task for searching purposes.
+     * Extracts the actual task description without command prefixes.
+     *
+     * @param task The task to get the description from.
+     * @return The display description of the task.
+     */
+    private String getTaskDisplayDescription(Task task) {
+        if (task instanceof Todo) {
+            return task.getDescription().substring(5); // Remove "todo " prefix
+        } else if (task instanceof Deadline) {
+            return ((Deadline) task).taskName;
+        } else if (task instanceof Event) {
+            return ((Event) task).taskName;
+        }
+        return task.getDescription();
     }
 
     public ArrayList<Task> getTasks() {

@@ -1,4 +1,4 @@
-package task;
+package honey.task;
 
 import honey.exceptions.EmptyDescriptionException;
 import honey.exceptions.InvalidDateFormatException;
@@ -16,7 +16,7 @@ public class Event extends Task {
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     public Event(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description, TaskType.EVENT);
+        super(description, "E");
         
         if (description.trim().equals("event") || description.length() <= 6) {
             throw new EmptyDescriptionException("event");
@@ -63,9 +63,9 @@ public class Event extends Task {
         String formattedEnd = endDate.format(OUTPUT_FORMAT);
         
         if (startDate.equals(endDate)) {
-            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (on: " + formattedStart + ")";
+            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (on: " + formattedStart + ")";
         } else {
-            return "[" + type.getSymbol() + "][" + getStatusIcon() + "] " + taskName + " (from: " + formattedStart + " to: " + formattedEnd + ")";
+            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (from: " + formattedStart + " to: " + formattedEnd + ")";
         }
     }
 }

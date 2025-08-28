@@ -1,157 +1,163 @@
 package honey.parser;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import honey.exceptions.HoneyException;
-import honey.exceptions.InvalidCommandException;
-import honey.exceptions.InvalidNumberFormatException;
-import honey.exceptions.InvalidDateFormatException;
-import honey.command.Command;
-import honey.command.ExitCommand;
-import honey.command.ListCommand;
-import honey.command.AddCommand;
-import honey.command.MarkCommand;
-import honey.command.UnmarkCommand;
-import honey.command.DeleteCommand;
-import honey.command.DueCommand;
+import honey.storage.Storage;
+import honey.tasklist.TaskList;
+import honey.ui.Ui;
 
 public class ParserTest {
+    private TaskList taskList;
+    private Ui ui;
+    private Storage storage;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
     
-    @Test
-    public void testGetCommandTypeExact() {
-        assertEquals(CommandType.EXIT, Parser.getCommandType("bye"));
-        assertEquals(CommandType.LIST, Parser.getCommandType("list"));
-        assertEquals(CommandType.EXIT, Parser.getCommandType("BYE"));
-        assertEquals(CommandType.LIST, Parser.getCommandType("LIST"));
+    @BeforeEach
+    public void setUp() {
+        taskList = new TaskList();
+        ui = new Ui();
+        storage = new Storage("test_data/parser_test.txt");
+        System.setOut(new PrintStream(outContent));
     }
     
     @Test
-    public void testGetCommandTypePrefix() {
-        assertEquals(CommandType.MARK, Parser.getCommandType("mark 1"));
-        assertEquals(CommandType.UNMARK, Parser.getCommandType("unmark 1"));
-        assertEquals(CommandType.DELETE, Parser.getCommandType("delete 1"));
-        assertEquals(CommandType.TODO, Parser.getCommandType("todo read book"));
-        assertEquals(CommandType.DEADLINE, Parser.getCommandType("deadline return book /by 2019-10-15"));
-        assertEquals(CommandType.EVENT, Parser.getCommandType("event meeting /from 2019-10-15 /to 2019-10-16"));
-        assertEquals(CommandType.DUE, Parser.getCommandType("due 2019-10-15"));
+    public void testExecuteByeCommand() throws HoneyException {
+        boolean isExit = Parser.executeCommand("bye", taskList, ui, storage);
+        assertTrue(isExit);
     }
     
     @Test
-    public void testGetCommandTypeUnknown() {
-        assertEquals(CommandType.UNKNOWN, Parser.getCommandType("unknown"));
-        assertEquals(CommandType.UNKNOWN, Parser.getCommandType(""));
-        assertEquals(CommandType.UNKNOWN, Parser.getCommandType("mark"));
-        assertEquals(CommandType.UNKNOWN, Parser.getCommandType("todo"));
+    public void testExecuteListCommand() throws HoneyException {
+        boolean isExit = Parser.executeCommand("list", taskList, ui, storage);
+        assertFalse(isExit);
+        assertTrue(outContent.toString().contains("No tasks in your list!"));
     }
     
     @Test
-    public void testParseExitCommand() throws HoneyException {
-        Command command = Parser.parse("bye");
-        assertTrue(command instanceof ExitCommand);
+    public void testExecuteAddTodoCommand() throws HoneyException {
+        boolean isExit = Parser.executeCommand("todo read book", taskList, ui, storage);
+        assertFalse(isExit);
+        assertEquals(1, taskList.size());
+        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
     }
     
     @Test
-    public void testParseListCommand() throws HoneyException {
-        Command command = Parser.parse("list");
-        assertTrue(command instanceof ListCommand);
+    public void testExecuteAddDeadlineCommand() throws HoneyException {
+        boolean isExit = Parser.executeCommand("deadline return book /by 2019-10-15", taskList, ui, storage);
+        assertFalse(isExit);
+        assertEquals(1, taskList.size());
+        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
     }
     
     @Test
-    public void testParseAddCommands() throws HoneyException {
-        Command todoCommand = Parser.parse("todo read book");
-        assertTrue(todoCommand instanceof AddCommand);
+    public void testExecuteAddEventCommand() throws HoneyException {
+        boolean isExit = Parser.executeCommand("event meeting /from 2019-10-15 /to 2019-10-16", taskList, ui, storage);
+        assertFalse(isExit);
+        assertEquals(1, taskList.size());
+        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
+    }
+    
+    @Test
+    public void testExecuteMarkCommand() throws HoneyException {
+        taskList.addTask("todo read book");
+        outContent.reset();
         
-        Command deadlineCommand = Parser.parse("deadline return book /by 2019-10-15");
-        assertTrue(deadlineCommand instanceof AddCommand);
+        boolean isExit = Parser.executeCommand("mark 1", taskList, ui, storage);
+        assertFalse(isExit);
+        assertTrue(outContent.toString().contains("Nice! I've marked this task as done:"));
+        assertTrue(taskList.getTasks().get(0).getIsDone());
+    }
+    
+    @Test
+    public void testExecuteUnmarkCommand() throws HoneyException {
+        taskList.addTask("todo read book");
+        taskList.markTask(1);
+        outContent.reset();
         
-        Command eventCommand = Parser.parse("event meeting /from 2019-10-15 /to 2019-10-16");
-        assertTrue(eventCommand instanceof AddCommand);
+        boolean isExit = Parser.executeCommand("unmark 1", taskList, ui, storage);
+        assertFalse(isExit);
+        assertTrue(outContent.toString().contains("OK, I've marked this task as not done yet:"));
+        assertFalse(taskList.getTasks().get(0).getIsDone());
     }
     
     @Test
-    public void testParseMarkCommand() throws HoneyException {
-        Command command = Parser.parse("mark 1");
-        assertTrue(command instanceof MarkCommand);
-    }
-    
-    @Test
-    public void testParseUnmarkCommand() throws HoneyException {
-        Command command = Parser.parse("unmark 1");
-        assertTrue(command instanceof UnmarkCommand);
-    }
-    
-    @Test
-    public void testParseDeleteCommand() throws HoneyException {
-        Command command = Parser.parse("delete 1");
-        assertTrue(command instanceof DeleteCommand);
-    }
-    
-    @Test
-    public void testParseDueCommand() throws HoneyException {
-        Command command = Parser.parse("due 2019-10-15");
-        assertTrue(command instanceof DueCommand);
-    }
-    
-    @Test
-    public void testParseInvalidCommand() {
-        assertThrows(InvalidCommandException.class, () -> {
-            Parser.parse("invalid command");
-        });
+    public void testExecuteDeleteCommand() throws HoneyException {
+        taskList.addTask("todo read book");
+        outContent.reset();
         
-        assertThrows(InvalidCommandException.class, () -> {
-            Parser.parse("");
-        });
+        boolean isExit = Parser.executeCommand("delete 1", taskList, ui, storage);
+        assertFalse(isExit);
+        assertEquals(0, taskList.size());
+        assertTrue(outContent.toString().contains("Noted. I've removed this task:"));
     }
     
     @Test
-    public void testParseTaskNumber() throws HoneyException {
-        assertEquals(1, Parser.parseTaskNumber("mark 1", "mark"));
-        assertEquals(5, Parser.parseTaskNumber("delete 5", "delete"));
-        assertEquals(10, Parser.parseTaskNumber("unmark 10", "unmark"));
-    }
-    
-    @Test
-    public void testParseTaskNumberInvalid() {
-        assertThrows(InvalidNumberFormatException.class, () -> {
-            Parser.parseTaskNumber("mark abc", "mark");
-        });
+    public void testExecuteFindCommand() throws HoneyException {
+        taskList.addTask("todo read book");
+        taskList.addTask("todo write report");
+        outContent.reset();
         
-        assertThrows(InvalidNumberFormatException.class, () -> {
-            Parser.parseTaskNumber("mark", "mark");
-        });
-        
-        assertThrows(InvalidNumberFormatException.class, () -> {
-            Parser.parseTaskNumber("mark ", "mark");
-        });
+        boolean isExit = Parser.executeCommand("find book", taskList, ui, storage);
+        assertFalse(isExit);
+        assertTrue(outContent.toString().contains("Here are the matching tasks in your list:"));
+        assertTrue(outContent.toString().contains("read book"));
+        assertFalse(outContent.toString().contains("write report"));
     }
     
     @Test
-    public void testParseDueDate() throws HoneyException {
-        assertEquals("2019-10-15", Parser.parseDueDate("due 2019-10-15"));
-        assertEquals("2020-12-25", Parser.parseDueDate("due 2020-12-25"));
+    public void testExecuteDueCommand() throws HoneyException {
+        taskList.addTask("deadline return book /by 2019-10-15");
+        outContent.reset();
+        
+        boolean isExit = Parser.executeCommand("due 2019-10-15", taskList, ui, storage);
+        assertFalse(isExit);
+        assertTrue(outContent.toString().contains("Here are the tasks due on Oct 15 2019:") ||
+                   outContent.toString().contains("No tasks due on Oct 15 2019!"));
     }
     
     @Test
-    public void testParseDueDateInvalid() {
-        assertThrows(InvalidDateFormatException.class, () -> {
-            Parser.parseDueDate("due");
-        });
-        
-        assertThrows(InvalidDateFormatException.class, () -> {
-            Parser.parseDueDate("due ");
+    public void testExecuteInvalidCommand() {
+        assertThrows(HoneyException.class, () -> {
+            Parser.executeCommand("invalid command", taskList, ui, storage);
         });
     }
     
     @Test
-    public void testParseWhitespaceHandling() throws HoneyException {
-        assertEquals(CommandType.LIST, Parser.getCommandType("  list  "));
-        assertEquals(CommandType.MARK, Parser.getCommandType("  mark 1  "));
-        
-        Command command = Parser.parse("  list  ");
-        assertTrue(command instanceof ListCommand);
-        
-        // Test with properly trimmed input
-        assertEquals(1, Parser.parseTaskNumber("mark 1", "mark"));
+    public void testExecuteMarkWithInvalidNumber() {
+        assertThrows(HoneyException.class, () -> {
+            Parser.executeCommand("mark abc", taskList, ui, storage);
+        });
+    }
+    
+    @Test
+    public void testExecuteMarkWithMissingNumber() {
+        assertThrows(HoneyException.class, () -> {
+            Parser.executeCommand("mark", taskList, ui, storage);
+        });
+    }
+    
+    @Test
+    public void testExecuteFindWithEmptyKeyword() {
+        assertThrows(HoneyException.class, () -> {
+            Parser.executeCommand("find", taskList, ui, storage);
+        });
+    }
+    
+    @Test
+    public void testExecuteDueWithEmptyDate() {
+        assertThrows(HoneyException.class, () -> {
+            Parser.executeCommand("due", taskList, ui, storage);
+        });
+    }
+    
+    public void tearDown() {
+        System.setOut(originalOut);
     }
 }

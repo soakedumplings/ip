@@ -1,10 +1,10 @@
 package honey.storage;
 
 import honey.exceptions.HoneyException;
-import task.Task;
-import task.Todo;
-import task.Deadline;
-import task.Event;
+import honey.task.Task;
+import honey.task.Todo;
+import honey.task.Deadline;
+import honey.task.Event;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -73,7 +73,7 @@ public class Storage {
     
     private String taskToFileFormat(Task task) { // from user interface to saved file
         StringBuilder sb = new StringBuilder();
-        sb.append(task.getType().toString()).append(" | ");
+        sb.append(task.getType()).append(" | ");
         sb.append(task.getIsDone() ? "1" : "0").append(" | ");
         
         if (task instanceof Todo) {

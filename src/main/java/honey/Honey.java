@@ -3,7 +3,6 @@ package honey;
 import honey.exceptions.HoneyException;
 import honey.storage.Storage;
 import honey.parser.Parser;
-import honey.command.Command;
 import honey.tasklist.TaskList;
 import honey.ui.Ui;
 
@@ -31,9 +30,7 @@ public class Honey {
             try {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
-                Command c = Parser.parse(fullCommand);
-                c.execute(tasks, ui, storage);
-                isExit = c.isExit();
+                isExit = Parser.executeCommand(fullCommand, tasks, ui, storage);
             } catch (HoneyException e) {
                 ui.showError(e.getMessage());
             } finally {
