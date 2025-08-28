@@ -16,15 +16,32 @@ import java.nio.file.Paths;
 
 import java.util.ArrayList;
 
+/**
+ * Handles loading and saving of tasks to persistent storage.
+ * Manages file I/O operations for task data persistence.
+ */
 public class Storage {
+    /** Path to the data file */
     private final Path dataFilePath;
+    /** Path to the data directory */
     private final Path dataDirPath;
     
+    /**
+     * Constructs a Storage object with the specified file path.
+     *
+     * @param filePath Path to the data file for storing tasks.
+     */
     public Storage(String filePath) {
         this.dataFilePath = Paths.get(filePath);
         this.dataDirPath = this.dataFilePath.getParent();
     }
     
+    /**
+     * Saves the list of tasks to the data file.
+     * Creates the directory if it doesn't exist.
+     *
+     * @param tasks List of tasks to save.
+     */
     public void saveTasks(ArrayList<Task> tasks) {
         try {
             // Create directory if it doesn't exist
@@ -44,6 +61,13 @@ public class Storage {
         }
     }
     
+    /**
+     * Loads tasks from the data file.
+     * Returns an empty list if the file doesn't exist.
+     *
+     * @return List of tasks loaded from the file.
+     * @throws HoneyException If there are issues reading the file.
+     */
     public ArrayList<Task> load() throws HoneyException {
         ArrayList<Task> tasks = new ArrayList<>();
         
@@ -71,7 +95,14 @@ public class Storage {
         return tasks;
     }
     
-    private String taskToFileFormat(Task task) { // from user interface to saved file
+    /**
+     * Converts a task object to file format string.
+     * Transforms task data into a format suitable for file storage.
+     *
+     * @param task Task to convert to file format.
+     * @return String representation of the task for file storage.
+     */
+    private String taskToFileFormat(Task task) {
         StringBuilder sb = new StringBuilder();
         sb.append(task.getType()).append(" | ");
         sb.append(task.getIsDone() ? "1" : "0").append(" | ");
@@ -91,7 +122,15 @@ public class Storage {
         return sb.toString();
     }
     
-    private Task parseTaskFromFile(String line) throws HoneyException { // from saved file to user interface
+    /**
+     * Parses a task from a file format string.
+     * Reconstructs task objects from stored file data.
+     *
+     * @param line File format string representing a task.
+     * @return Task object parsed from the string.
+     * @throws HoneyException If the file format is invalid.
+     */
+    private Task parseTaskFromFile(String line) throws HoneyException {
         if (line.isEmpty()) {
             return null;
         }
