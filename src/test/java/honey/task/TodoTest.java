@@ -1,10 +1,10 @@
 package honey.task;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Test;
+
 import honey.exceptions.EmptyDescriptionException;
-import honey.task.Todo;
 
 public class TodoTest {
     

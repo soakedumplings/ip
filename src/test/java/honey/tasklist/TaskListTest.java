@@ -8,10 +8,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-import honey.task.Task;
-import honey.task.Todo;
 import honey.task.Deadline;
 import honey.task.Event;
+import honey.task.Task;
+import honey.task.Todo;
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidTaskNumberException;
 
@@ -165,7 +165,7 @@ public class TaskListTest {
         taskList.addTask("deadline return book /by 2019-10-15");
         taskList.addTask("event meeting /from 2019-10-15 /to 2019-10-16");
         outContent.reset();
-        
+
         taskList.findTasks("book");
         String output = outContent.toString();
         assertTrue(output.contains("Here are the matching tasks in your list:"));
@@ -173,37 +173,37 @@ public class TaskListTest {
         assertTrue(output.contains("return book"));
         assertFalse(output.contains("meeting"));
     }
-    
+
     @Test
     public void testFindTasksCaseInsensitive() throws HoneyException {
         taskList.addTask("todo Read Book");
         taskList.addTask("deadline Return BOOK /by 2019-10-15");
         outContent.reset();
-        
+
         taskList.findTasks("book");
         String output = outContent.toString();
         assertTrue(output.contains("Here are the matching tasks in your list:"));
         assertTrue(output.contains("Read Book"));
         assertTrue(output.contains("Return BOOK"));
     }
-    
+
     @Test
     public void testFindTasksNoMatches() throws HoneyException {
         taskList.addTask("todo read book");
         taskList.addTask("deadline submit report /by 2019-10-15");
         outContent.reset();
-        
+
         taskList.findTasks("meeting");
         assertTrue(outContent.toString().contains("No matching tasks found!"));
     }
-    
+
     @Test
     public void testFindTasksEmptyList() {
         outContent.reset();
         taskList.findTasks("book");
         assertTrue(outContent.toString().contains("No matching tasks found!"));
     }
-    
+
     public void tearDown() {
         System.setOut(originalOut);
     }

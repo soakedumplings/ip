@@ -1,16 +1,17 @@
 package honey.tasklist;
-import java.util.ArrayList;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
-import honey.task.Task;
-import honey.task.Todo;
-import honey.task.Deadline;
-import honey.task.Event;
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
 import honey.exceptions.InvalidTaskNumberException;
+import honey.task.Deadline;
+import honey.task.Event;
+import honey.task.Task;
+import honey.task.Todo;
 
 
 public class TaskList {
@@ -138,14 +139,14 @@ public class TaskList {
     public void findTasks(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
-        
+
         for (Task task : tasks) {
             String taskDescription = getTaskDisplayDescription(task).toLowerCase();
             if (taskDescription.contains(lowerKeyword)) {
                 matchingTasks.add(task);
             }
         }
-        
+
         if (matchingTasks.isEmpty()) {
             System.out.println(" No matching tasks found!");
         } else {

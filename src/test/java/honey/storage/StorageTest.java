@@ -11,11 +11,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 
-import honey.task.Task;
-import honey.task.Todo;
+import honey.exceptions.HoneyException;
 import honey.task.Deadline;
 import honey.task.Event;
-import honey.exceptions.HoneyException;
+import honey.task.Task;
+import honey.task.Todo;
 
 public class StorageTest {
     private Storage storage;
