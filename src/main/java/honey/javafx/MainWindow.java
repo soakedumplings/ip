@@ -42,7 +42,7 @@ public class MainWindow extends AnchorPane {
      */
     public void setHoney(Honey h) {
         honey = h;
-        dialogContainer.getChildren().add(DialogBox.getHoneyDialog(Honey.WELCOME_MESSAGE, honeyImage));
+        addDialogs(DialogBox.getHoneyDialog(Honey.WELCOME_MESSAGE, honeyImage));
         userInput.requestFocus();
     }
 
@@ -63,7 +63,7 @@ public class MainWindow extends AnchorPane {
         try {
             String response = honey.getResponse(input);
             if (response.equals("true")) {
-                dialogContainer.getChildren().add(DialogBox.getHoneyDialog(Honey.GOODBYE_MESSAGE, honeyImage));
+                addDialogs(DialogBox.getHoneyDialog(Honey.GOODBYE_MESSAGE, honeyImage));
                 Platform.exit();
             }
             addDialogs(
@@ -71,7 +71,7 @@ public class MainWindow extends AnchorPane {
                     DialogBox.getHoneyDialog(response, honeyImage)
             );
         } catch (Exception e) {
-            dialogContainer.getChildren().add(DialogBox.getHoneyDialog(e.getMessage(), honeyImage));
+            addDialogs(DialogBox.getHoneyDialog(e.getMessage(), honeyImage));
         } finally {
             userInput.clear();
         }
