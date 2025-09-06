@@ -1,13 +1,19 @@
 package honey.task;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import honey.exceptions.EmptyDescriptionException;
 
+/**
+ * Test class for Todo functionality.
+ */
 public class TodoTest {
-    
+
     @Test
     public void testTodoCreation() throws EmptyDescriptionException {
         Todo todo = new Todo("todo read book");
@@ -16,18 +22,18 @@ public class TodoTest {
         assertFalse(todo.getIsDone());
         assertEquals(" ", todo.getStatusIcon());
     }
-    
+
     @Test
     public void testTodoEmptyDescription() {
         assertThrows(EmptyDescriptionException.class, () -> {
             new Todo("todo");
         });
-        
+
         assertThrows(EmptyDescriptionException.class, () -> {
             new Todo("todo ");
         });
     }
-    
+
     @Test
     public void testTaskMarkAsDone() throws EmptyDescriptionException {
         Todo todo = new Todo("todo read book");
@@ -35,7 +41,7 @@ public class TodoTest {
         assertTrue(todo.getIsDone());
         assertEquals("X", todo.getStatusIcon());
     }
-    
+
     @Test
     public void testTaskMarkAsNotDone() throws EmptyDescriptionException {
         Todo todo = new Todo("todo read book");
@@ -44,12 +50,12 @@ public class TodoTest {
         assertFalse(todo.getIsDone());
         assertEquals(" ", todo.getStatusIcon());
     }
-    
+
     @Test
     public void testTodoToString() throws EmptyDescriptionException {
         Todo todo = new Todo("todo read book");
         assertEquals("[T][ ] read book", todo.toString());
-        
+
         todo.markAsDone();
         assertEquals("[T][X] read book", todo.toString());
     }

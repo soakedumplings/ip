@@ -32,3 +32,4 @@ public class Todo extends Task {
         return "[" + type + "][" + getStatusIcon() + "] " + description.substring(5);
     }
 }
+

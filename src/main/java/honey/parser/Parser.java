@@ -1,68 +1,69 @@
 package honey.parser;
 
+import honey.Honey;
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
 import honey.exceptions.InvalidDateFormatException;
 import honey.exceptions.InvalidNumberFormatException;
 import honey.storage.Storage;
 import honey.tasklist.TaskList;
-import honey.ui.Ui;
 
 /**
  * Handles parsing and executing user commands directly.
  * Simplified implementation without command pattern abstraction.
  */
 public class Parser {
-    
     /**
      * Parses and executes a user command directly.
      *
      * @param input The user input string.
      * @param tasks The task list to operate on.
-     * @param ui The user interface for output.
      * @param storage The storage for saving changes.
-     * @return True if the command is an exit command, false otherwise.
+     * @return "true" if the command is an exit command, or the String response otherwise
      * @throws HoneyException If the command is invalid or execution fails.
      */
-    public static boolean executeCommand(String input, TaskList tasks, Ui ui, Storage storage) throws HoneyException {
+    public String executeCommand(String input, TaskList tasks, Storage storage) throws HoneyException {
         String trimmed = input.trim();
-        
+
         if (trimmed.equals("bye")) {
-            return true;
+           return "true";
         } else if (trimmed.equals("list")) {
-            tasks.listTasks();
+            return tasks.listTasks();
         } else if (trimmed.startsWith("mark ")) {
             int taskNumber = parseTaskNumber(trimmed, "mark");
-            tasks.markTask(taskNumber);
+            String result = tasks.markTask(taskNumber);
             storage.saveTasks(tasks.getTasks());
+            return result;
         } else if (trimmed.startsWith("unmark ")) {
             int taskNumber = parseTaskNumber(trimmed, "unmark");
-            tasks.unmarkTask(taskNumber);
+            String result = tasks.unmarkTask(taskNumber);
             storage.saveTasks(tasks.getTasks());
+            return result;
         } else if (trimmed.startsWith("delete ")) {
             int taskNumber = parseTaskNumber(trimmed, "delete");
-            tasks.deleteTask(taskNumber);
+            String result = tasks.deleteTask(taskNumber);
             storage.saveTasks(tasks.getTasks());
+            return result;
         } else if (trimmed.startsWith("todo ") || trimmed.startsWith("deadline ") || trimmed.startsWith("event ")) {
-            tasks.addTask(trimmed);
+            String result = tasks.addTask(trimmed);
             storage.saveTasks(tasks.getTasks());
+            return result;
         } else if (trimmed.startsWith("due ")) {
             String dateStr = extractAfterCommand(trimmed, "due");
             if (dateStr.isEmpty()) {
                 throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
             }
             tasks.findTasksDue(dateStr);
+            return "Tasks due on " + dateStr + " displayed";
         } else if (trimmed.startsWith("find ")) {
             String keyword = extractAfterCommand(trimmed, "find");
             if (keyword.isEmpty()) {
                 throw new InvalidCommandException("Please provide a keyword to search for.\nUsage: find [keyword]");
             }
-            tasks.findTasks(keyword);
+            return tasks.findTasks(keyword);
         } else {
             throw new InvalidCommandException(trimmed);
         }
-        
-        return false;
     }
 
     /**

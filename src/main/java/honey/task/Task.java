@@ -21,9 +21,9 @@ public class Task {
      * @param type Type of the task.
      */
     public Task(String description, String type) {
-            this.description = description;
-            this.isDone = false;
-            this.type = type;
+        this.description = description;
+        this.isDone = false;
+        this.type = type;
     }
 
     /**
@@ -79,4 +79,3 @@ public class Task {
         return this.isDone;
     }
 }
-

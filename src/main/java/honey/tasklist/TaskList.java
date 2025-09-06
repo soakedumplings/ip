@@ -13,119 +13,165 @@ import honey.task.Event;
 import honey.task.Task;
 import honey.task.Todo;
 
-
+/**
+ * Manages a list of tasks and provides operations for adding, removing, and searching tasks.
+ */
 public class TaskList {
     private ArrayList<Task> tasks;
 
+    /**
+     * Constructs an empty TaskList.
+     */
     public TaskList() {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Constructs a TaskList with the provided list of tasks.
+     *
+     * @param tasks The list of tasks to initialize with.
+     */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public void addTask(String description) throws HoneyException {
+    /**
+     * Adds a new task based on the description string.
+     *
+     * @param description The task description string.
+     * @throws HoneyException If the task creation fails.
+     */
+    public String addTask(String description) throws HoneyException {
         if (description.startsWith("todo")) {
             Todo task = new Todo(description);
-            addToList(task);
+            return addToList(task);
         } else if (description.startsWith("deadline")) {
             Deadline task = new Deadline(description);
-            addToList(task);
+            return addToList(task);
         } else if (description.startsWith("event")) {
             Event task = new Event(description);
-            addToList(task);
+            return addToList(task);
         } else {
             throw new InvalidCommandException(description);
         }
     }
 
-    public void addToList(Task task) {
+    /**
+     * Adds a task to the list and displays confirmation message.
+     *
+     * @param task The task to add.
+     */
+    public String addToList(Task task) {
         tasks.add(task);
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+        return "Got it. I've added this task: " + "\n" + task + "\n"
+                + "Now you have " + tasks.size() + " tasks in the list.";
     }
 
-    public void markTask(int taskNumber) throws HoneyException {
+    /**
+     * Marks a task as done.
+     *
+     * @param taskNumber The task number to mark (1-indexed).
+     * @throws HoneyException If the task number is invalid.
+     */
+    public String markTask(int taskNumber) throws HoneyException {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsDone();
-            System.out.println(" Nice! I've marked this task as done:");
-            System.out.println("   " + task);
+            return "Nice! I've marked this task as done:" + "\n" + task;
+
         } else {
             throw new InvalidTaskNumberException("mark", tasks.size());
         }
     }
 
-    public void unmarkTask(int taskNumber) throws HoneyException {
+    /**
+     * Marks a task as not done.
+     *
+     * @param taskNumber The task number to unmark (1-indexed).
+     * @throws HoneyException If the task number is invalid.
+     */
+    public String unmarkTask(int taskNumber) throws HoneyException {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsNotDone();
-            System.out.println(" OK, I've marked this task as not done yet:");
-            System.out.println("   " + task);
+            return "OK, I've marked this task as not done yet: " + "\n" + task;
         } else {
             throw new InvalidTaskNumberException("unmark", tasks.size());
         }
     }
 
-    public void deleteTask(int taskNumber) throws HoneyException {
+    /**
+     * Deletes a task from the list.
+     *
+     * @param taskNumber The task number to delete (1-indexed).
+     * @throws HoneyException If the task number is invalid.
+     */
+    public String deleteTask(int taskNumber) throws HoneyException {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             tasks.remove(taskNumber - 1);
-            System.out.println(" Noted. I've removed this task:");
-            System.out.println("   " + task);
-            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            return "Noted. I've removed this task:" + "\n" + task
+                    + "\n" + "Now you have " + tasks.size() + " tasks in the list.";
         } else {
             throw new InvalidTaskNumberException("delete", tasks.size());
         }
     }
 
-    public void listTasks() {
+    /**
+     * Lists all tasks in the task list.
+     */
+    public String listTasks() {
         if (tasks.isEmpty()) {
-            System.out.println(" No tasks in your list!");
+            return "No tasks in your list!";
         } else {
-            System.out.println(" Here are the tasks in your list:");
+            StringBuilder list = new StringBuilder();
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.println(" " + (i+1) + ". " + tasks.get(i).toString());
+                list.append(i + 1).append(". ").append(tasks.get(i).toString()).append("\n");
             }
+            return "Here are the tasks in your list:\n" + list;
         }
     }
 
+    /**
+     * Finds and displays tasks due on a specific date.
+     *
+     * @param dateStr The date string to search for (yyyy-MM-dd format).
+     * @throws HoneyException If the date format is invalid.
+     */
     public void findTasksDue(String dateStr) throws HoneyException {
         LocalDate queryDate;
-        
+
         try {
             queryDate = LocalDate.parse(dateStr);
         } catch (DateTimeParseException e) {
             throw new InvalidCommandException("Invalid date format. Please use yyyy-MM-dd");
         }
-        
+
         ArrayList<Task> dueTasks = new ArrayList<>();
         for (Task task : tasks) {
             if (task instanceof Deadline) {
                 Deadline deadline = (Deadline) task;
-                LocalDate deadlineDate = deadline.deadline.toLocalDate();
+                LocalDate deadlineDate = deadline.getDeadline().toLocalDate();
                 if (deadlineDate.equals(queryDate)) {
                     dueTasks.add(task);
                 }
             } else if (task instanceof Event) {
                 Event event = (Event) task;
-                if ((event.startDate.equals(queryDate)) || 
-                    (event.endDate.equals(queryDate)) ||
-                    (queryDate.isAfter(event.startDate) && queryDate.isBefore(event.endDate))) {
+                if ((event.getStartDate().equals(queryDate))
+                        || (event.getEndDate().equals(queryDate))
+                        || (queryDate.isAfter(event.getStartDate()) && queryDate.isBefore(event.getEndDate()))) {
                     dueTasks.add(task);
                 }
             }
         }
-        
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         if (dueTasks.isEmpty()) {
             System.out.println(" No tasks due on " + queryDate.format(formatter) + "!");
         } else {
             System.out.println(" Here are the tasks due on " + queryDate.format(formatter) + ":");
             for (int i = 0; i < dueTasks.size(); i++) {
-                System.out.println(" " + (i+1) + ". " + dueTasks.get(i).toString());
+                System.out.println(" " + (i + 1) + ". " + dueTasks.get(i).toString());
             }
         }
     }
@@ -136,7 +182,7 @@ public class TaskList {
      *
      * @param keyword The keyword to search for in task descriptions.
      */
-    public void findTasks(String keyword) {
+    public String findTasks(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
 
@@ -148,12 +194,13 @@ public class TaskList {
         }
 
         if (matchingTasks.isEmpty()) {
-            System.out.println(" No matching tasks found!");
+            return "No matching tasks found!";
         } else {
-            System.out.println(" Here are the matching tasks in your list:");
+            StringBuilder list = new StringBuilder();
             for (int i = 0; i < matchingTasks.size(); i++) {
-                System.out.println(" " + (i + 1) + "." + matchingTasks.get(i).toString());
+                list.append(i + 1).append(". ").append(matchingTasks.get(i).toString()).append("\n");
             }
+            return list.toString();
         }
     }
 
@@ -168,17 +215,27 @@ public class TaskList {
         if (task instanceof Todo) {
             return task.getDescription().substring(5); // Remove "todo " prefix
         } else if (task instanceof Deadline) {
-            return ((Deadline) task).taskName;
+            return ((Deadline) task).getTaskName();
         } else if (task instanceof Event) {
-            return ((Event) task).taskName;
+            return ((Event) task).getTaskName();
         }
         return task.getDescription();
     }
 
+    /**
+     * Gets the list of tasks.
+     *
+     * @return The list of tasks.
+     */
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Gets the number of tasks in the list.
+     *
+     * @return The number of tasks.
+     */
     public int size() {
         return tasks.size();
     }

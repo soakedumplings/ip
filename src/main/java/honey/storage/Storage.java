@@ -9,10 +9,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import honey.exceptions.HoneyException;
-import honey.task.Task;
-import honey.task.Todo;
 import honey.task.Deadline;
 import honey.task.Event;
+import honey.task.Task;
+import honey.task.Todo;
 
 /**
  * Handles loading and saving of tasks to persistent storage.
@@ -23,7 +23,7 @@ public class Storage {
     private final Path dataFilePath;
     /** Path to the data directory */
     private final Path dataDirPath;
-    
+
     /**
      * Constructs a Storage object with the specified file path.
      *
@@ -33,7 +33,7 @@ public class Storage {
         this.dataFilePath = Paths.get(filePath);
         this.dataDirPath = this.dataFilePath.getParent();
     }
-    
+
     /**
      * Saves the list of tasks to the data file.
      * Creates the directory if it doesn't exist.
@@ -46,7 +46,7 @@ public class Storage {
             if (dataDirPath != null && !Files.exists(dataDirPath)) {
                 Files.createDirectories(dataDirPath);
             }
-            
+
             // Write tasks to file
             try (BufferedWriter writer = Files.newBufferedWriter(dataFilePath)) {
                 for (Task task : tasks) {
@@ -58,7 +58,7 @@ public class Storage {
             System.out.println(" Warning: Could not save tasks to file. " + e.getMessage());
         }
     }
-    
+
     /**
      * Loads tasks from the data file.
      * Returns an empty list if the file doesn't exist.
@@ -68,12 +68,12 @@ public class Storage {
      */
     public ArrayList<Task> load() throws HoneyException {
         ArrayList<Task> tasks = new ArrayList<>();
-        
+
         // Return empty list if file doesn't exist
         if (!Files.exists(dataFilePath)) {
             return tasks;
         }
-        
+
         try (BufferedReader reader = Files.newBufferedReader(dataFilePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -89,10 +89,10 @@ public class Storage {
         } catch (IOException e) {
             System.out.println(" Warning: Could not load tasks from file. " + e.getMessage());
         }
-        
+
         return tasks;
     }
-    
+
     /**
      * Converts a task object to file format string.
      * Transforms task data into a format suitable for file storage.
@@ -104,22 +104,22 @@ public class Storage {
         StringBuilder sb = new StringBuilder();
         sb.append(task.getType()).append(" | ");
         sb.append(task.getIsDone() ? "1" : "0").append(" | ");
-        
+
         if (task instanceof Todo) {
             sb.append(task.getDescription().substring(5));
         } else if (task instanceof Deadline) {
             Deadline deadline = (Deadline) task;
-            sb.append(deadline.taskName).append(" | ");
-            sb.append(deadline.deadline.toString()); // Store as ISO format: yyyy-MM-ddTHH:mm
+            sb.append(deadline.getTaskName()).append(" | ");
+            sb.append(deadline.getDeadline().toString()); // Store as ISO format: yyyy-MM-ddTHH:mm
         } else if (task instanceof Event) {
             Event event = (Event) task;
-            sb.append(event.taskName).append(" | ");
-            sb.append(event.startDate.toString()).append(" to ").append(event.endDate.toString());
+            sb.append(event.getTaskName()).append(" | ");
+            sb.append(event.getStartDate().toString()).append(" to ").append(event.getEndDate().toString());
         }
-        
+
         return sb.toString();
     }
-    
+
     /**
      * Parses a task from a file format string.
      * Reconstructs task objects from stored file data.
@@ -132,17 +132,17 @@ public class Storage {
         if (line.isEmpty()) {
             return null;
         }
-        
+
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
             throw new RuntimeException("Invalid format: insufficient parts");
         }
-        
+
         String typeStr = parts[0].trim();
         boolean isDone = "1".equals(parts[1].trim());
-        
+
         Task task = null;
-        
+
         switch (typeStr) {
         case "T":
             if (parts.length != 3) {
@@ -150,7 +150,7 @@ public class Storage {
             }
             task = new Todo("todo " + parts[2].trim());
             break;
-                
+
         case "D":
             if (parts.length != 4) {
                 throw new RuntimeException("Invalid DEADLINE format");
@@ -177,17 +177,18 @@ public class Storage {
             if (timeParts.length != 2) {
                 throw new RuntimeException("Invalid EVENT time format");
             }
-            task = new Event("event " + parts[2].trim() + " /from " + timeParts[0].trim() + " /to " + timeParts[1].trim());
+            task = new Event("event " + parts[2].trim() + " /from " + timeParts[0].trim()
+                    + " /to " + timeParts[1].trim());
             break;
 
         default:
             throw new RuntimeException("Unknown task type: " + typeStr);
         }
-        
+
         if (task != null && isDone) {
             task.markAsDone();
         }
-        
+
         return task;
     }
 }

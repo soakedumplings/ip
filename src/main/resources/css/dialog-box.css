@@ -1,0 +1,42 @@
+.label {
+    -fx-background-color: linear-gradient(to bottom right, #fff5b7, #ffeb7f);
+    -fx-border-color: #f0c040;
+    -fx-border-width: 2px;
+    -fx-background-radius: 1em 1em 0 1em;
+    -fx-border-radius: 1em 1em 0 1em;
+    -fx-font-family: "Comic Sans MS", "Chalkboard SE", "Bradley Hand", cursive;
+    -fx-font-size: 16px;
+    -fx-max-height: infinity;
+}
+
+.reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #fde7f0, #f9d5e5);
+    -fx-border-color: #f0b3d1;
+    -fx-background-radius: 1em 1em 1em 0;
+    -fx-border-radius: 1em 1em 1em 0;
+}
+
+.add-label {
+    -fx-background-color: yellow;
+}
+
+.marked-label {
+    -fx-background-color: palegreen;
+}
+
+.delete-label {
+    -fx-background-color: lightpink;
+}
+
+#displayPicture {
+    /* Shadow effect on image. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
+
+    /* Change size of image. */
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+
+    /* Rotate image clockwise by degrees. */
+    -fx-rotate: 0;
+}
+
