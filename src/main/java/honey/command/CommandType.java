@@ -1,5 +1,7 @@
 package honey.command;
 
+import java.util.Arrays;
+
 /**
  * Represents the different types of commands available in the Honey application.
  * Provides type safety and better structure for command categorization.
@@ -30,12 +32,10 @@ public enum CommandType {
      * @return The corresponding CommandType, or null if no match is found
      */
     public static CommandType fromCommandWord(String commandWord) {
-        for (CommandType type : values()) {
-            if (type.commandWord.equals(commandWord)) {
-                return type;
-            }
-        }
-        return null;
+        return Arrays.stream(values())
+                .filter(type -> type.commandWord.equals(commandWord))
+                .findFirst()
+                .orElse(null);
     }
 
 }
