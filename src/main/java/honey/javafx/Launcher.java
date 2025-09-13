@@ -1,6 +1,5 @@
 package honey.javafx;
 
-import honey.Honey;
 import javafx.application.Application;
 
 /**

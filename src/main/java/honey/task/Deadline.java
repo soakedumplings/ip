@@ -39,7 +39,7 @@ public class Deadline extends Task {
      * @throws InvalidDateFormatException If the date format is invalid.
      */
     public Deadline(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description, "D");
+        super(description, TaskType.DEADLINE);
 
         if (description.trim().equals("deadline") || description.length() <= 9) {
             throw new EmptyDescriptionException("deadline");
@@ -96,11 +96,11 @@ public class Deadline extends Task {
         if (deadline.getHour() == 0 && deadline.getMinute() == 0) {
             // Date only - format as "MMM dd yyyy"
             String formattedDate = deadline.format(DATE_OUTPUT);
-            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDate + ")";
+            return "[" + getType() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDate + ")";
         } else {
             // Date and time - format as "MMM dd yyyy, h:mma"
             String formattedDateTime = deadline.format(DATETIME_OUTPUT);
-            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDateTime + ")";
+            return "[" + getType() + "][" + getStatusIcon() + "] " + taskName + " (by: " + formattedDateTime + ")";
         }
     }
 

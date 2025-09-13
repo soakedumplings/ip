@@ -15,7 +15,7 @@ public class Todo extends Task {
      * @throws EmptyDescriptionException If the todo description is empty.
      */
     public Todo(String description) throws EmptyDescriptionException {
-        super(description, "T");
+        super(description, TaskType.TODO);
         if (description.trim().equals("todo") || description.length() <= 5) {
             throw new EmptyDescriptionException("todo");
         }
@@ -29,7 +29,7 @@ public class Todo extends Task {
      */
     @Override
     public String toString() {
-        return "[" + type + "][" + getStatusIcon() + "] " + description.substring(5);
+        return "[" + getType() + "][" + getStatusIcon() + "] " + description.substring(5);
     }
 }
 

@@ -1,231 +1,82 @@
 package honey.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import honey.exceptions.HoneyException;
-import honey.storage.Storage;
-import honey.tasklist.TaskList;
-import honey.ui.Ui;
+import honey.command.AddCommand;
+import honey.command.Command;
+import honey.command.DeleteCommand;
+import honey.command.ExitCommand;
+import honey.command.FindCommand;
+import honey.command.IncorrectCommand;
+import honey.command.ListCommand;
+import honey.command.MarkCommand;
 
 /**
- * Test class for Parser functionality.
+ * Simple, focused test for Parser.
+ * Tests only parsing logic - does input create correct Command objects?
  */
 public class ParserTest {
-    private TaskList taskList;
-    private Ui ui;
-    private Storage storage;
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
+    private Parser parser;
 
-    /**
-     * Sets up test environment before each test.
-     */
     @BeforeEach
     public void setUp() {
-        taskList = new TaskList();
-        ui = new Ui();
-        storage = new Storage("test_data/parser_test.txt");
-        System.setOut(new PrintStream(outContent));
+        parser = new Parser();
     }
 
-    /**
-     * Tests the execution of the bye command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteByeCommand() throws HoneyException {
-        boolean isExit = Parser.executeCommand("bye", taskList, ui, storage);
-        assertTrue(isExit);
+    public void parseCommand_listCommand_returnsListCommand() {
+        Command result = parser.parseCommand("list");
+        assertTrue(result instanceof ListCommand);
     }
 
-    /**
-     * Tests the execution of the list command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteListCommand() throws HoneyException {
-        boolean isExit = Parser.executeCommand("list", taskList, ui, storage);
-        assertFalse(isExit);
-        assertTrue(outContent.toString().contains("No tasks in your list!"));
+    public void parseCommand_byeCommand_returnsExitCommand() {
+        Command result = parser.parseCommand("bye");
+        assertTrue(result instanceof ExitCommand);
     }
 
-    /**
-     * Tests the execution of adding a todo command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteAddTodoCommand() throws HoneyException {
-        boolean isExit = Parser.executeCommand("todo read book", taskList, ui, storage);
-        assertFalse(isExit);
-        assertEquals(1, taskList.size());
-        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
+    public void parseCommand_todoCommand_returnsAddCommand() {
+        Command result = parser.parseCommand("todo read book");
+        assertTrue(result instanceof AddCommand);
     }
 
-    /**
-     * Tests the execution of adding a deadline command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteAddDeadlineCommand() throws HoneyException {
-        boolean isExit = Parser.executeCommand("deadline return book /by 2019-10-15", taskList, ui, storage);
-        assertFalse(isExit);
-        assertEquals(1, taskList.size());
-        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
+    public void parseCommand_markCommand_returnsMarkCommand() {
+        Command result = parser.parseCommand("mark 1");
+        assertTrue(result instanceof MarkCommand);
     }
 
-    /**
-     * Tests the execution of adding an event command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteAddEventCommand() throws HoneyException {
-        boolean isExit = Parser.executeCommand("event meeting /from 2019-10-15 /to 2019-10-16", taskList, ui, storage);
-        assertFalse(isExit);
-        assertEquals(1, taskList.size());
-        assertTrue(outContent.toString().contains("Got it. I've added this task:"));
+    public void parseCommand_deleteCommand_returnsDeleteCommand() {
+        Command result = parser.parseCommand("delete 1");
+        assertTrue(result instanceof DeleteCommand);
     }
 
-    /**
-     * Tests the execution of the mark command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteMarkCommand() throws HoneyException {
-        taskList.addTask("todo read book");
-        outContent.reset();
-
-        boolean isExit = Parser.executeCommand("mark 1", taskList, ui, storage);
-        assertFalse(isExit);
-        assertTrue(outContent.toString().contains("Nice! I've marked this task as done:"));
-        assertTrue(taskList.getTasks().get(0).getIsDone());
+    public void parseCommand_findCommand_returnsFindCommand() {
+        Command result = parser.parseCommand("find book");
+        assertTrue(result instanceof FindCommand);
     }
 
-    /**
-     * Tests the execution of the unmark command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteUnmarkCommand() throws HoneyException {
-        taskList.addTask("todo read book");
-        taskList.markTask(1);
-        outContent.reset();
-
-        boolean isExit = Parser.executeCommand("unmark 1", taskList, ui, storage);
-        assertFalse(isExit);
-        assertTrue(outContent.toString().contains("OK, I've marked this task as not done yet:"));
-        assertFalse(taskList.getTasks().get(0).getIsDone());
+    public void parseCommand_invalidCommand_returnsIncorrectCommand() {
+        Command result = parser.parseCommand("invalid");
+        assertTrue(result instanceof IncorrectCommand);
     }
 
-    /**
-     * Tests the execution of the delete command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteDeleteCommand() throws HoneyException {
-        taskList.addTask("todo read book");
-        outContent.reset();
-
-        boolean isExit = Parser.executeCommand("delete 1", taskList, ui, storage);
-        assertFalse(isExit);
-        assertEquals(0, taskList.size());
-        assertTrue(outContent.toString().contains("Noted. I've removed this task:"));
+    public void parseCommand_emptyInput_returnsIncorrectCommand() {
+        Command result = parser.parseCommand("");
+        assertTrue(result instanceof IncorrectCommand);
     }
 
-    /**
-     * Tests the execution of the find command.
-     * @throws HoneyException if command execution fails.
-     */
     @Test
-    public void testExecuteFindCommand() throws HoneyException {
-        taskList.addTask("todo read book");
-        taskList.addTask("todo write report");
-        outContent.reset();
-
-        boolean isExit = Parser.executeCommand("find book", taskList, ui, storage);
-        assertFalse(isExit);
-        assertTrue(outContent.toString().contains("Here are the matching tasks in your list:"));
-        assertTrue(outContent.toString().contains("read book"));
-        assertFalse(outContent.toString().contains("write report"));
-    }
-
-    /**
-     * Tests the execution of the due command.
-     * @throws HoneyException if command execution fails.
-     */
-    @Test
-    public void testExecuteDueCommand() throws HoneyException {
-        taskList.addTask("deadline return book /by 2019-10-15");
-        outContent.reset();
-
-        boolean isExit = Parser.executeCommand("due 2019-10-15", taskList, ui, storage);
-        assertFalse(isExit);
-        assertTrue(outContent.toString().contains("Here are the tasks due on Oct 15 2019:")
-                   || outContent.toString().contains("No tasks due on Oct 15 2019!"));
-    }
-
-    /**
-     * Tests the execution of an invalid command.
-     */
-    @Test
-    public void testExecuteInvalidCommand() {
-        assertThrows(HoneyException.class, () -> {
-            Parser.executeCommand("invalid command", taskList, ui, storage);
-        });
-    }
-
-    /**
-     * Tests the execution of mark command with invalid number.
-     */
-    @Test
-    public void testExecuteMarkWithInvalidNumber() {
-        assertThrows(HoneyException.class, () -> {
-            Parser.executeCommand("mark abc", taskList, ui, storage);
-        });
-    }
-
-    /**
-     * Tests the execution of mark command with missing number.
-     */
-    @Test
-    public void testExecuteMarkWithMissingNumber() {
-        assertThrows(HoneyException.class, () -> {
-            Parser.executeCommand("mark", taskList, ui, storage);
-        });
-    }
-
-    /**
-     * Tests the execution of find command with empty keyword.
-     */
-    @Test
-    public void testExecuteFindWithEmptyKeyword() {
-        assertThrows(HoneyException.class, () -> {
-            Parser.executeCommand("find", taskList, ui, storage);
-        });
-    }
-
-    /**
-     * Tests the execution of due command with empty date.
-     */
-    @Test
-    public void testExecuteDueWithEmptyDate() {
-        assertThrows(HoneyException.class, () -> {
-            Parser.executeCommand("due", taskList, ui, storage);
-        });
-    }
-
-    /**
-     * Tears down the test environment.
-     */
-    public void tearDown() {
-        System.setOut(originalOut);
+    public void parseCommand_markWithoutNumber_returnsIncorrectCommand() {
+        Command result = parser.parseCommand("mark");
+        assertTrue(result instanceof IncorrectCommand);
     }
 }
