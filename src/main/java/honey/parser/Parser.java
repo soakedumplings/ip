@@ -13,6 +13,7 @@ import honey.command.FindCommand;
 import honey.command.IncorrectCommand;
 import honey.command.ListCommand;
 import honey.command.MarkCommand;
+import honey.command.SortCommand;
 import honey.command.UnmarkCommand;
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
@@ -82,6 +83,9 @@ public class Parser {
             case DUE:
                 return prepareDueCommand(arguments);
 
+            case SORT:
+                return prepareSortCommand(arguments);
+
             default:
                 return new IncorrectCommand("Unknown command: " + commandWord);
             }
@@ -139,6 +143,16 @@ public class Parser {
             throw new InvalidDateFormatException("due", "due [date] (e.g., due 2019-12-02)");
         }
         return new DueCommand(arguments);
+    }
+
+    /**
+     * Prepares a SortCommand with the sort type.
+     */
+    private Command prepareSortCommand(String arguments) throws HoneyException {
+        if (arguments.isEmpty()) {
+            throw new InvalidCommandException("Please specify what to sort.\nUsage: sort deadline");
+        }
+        return new SortCommand(arguments.trim());
     }
 
     /**
