@@ -1,7 +1,8 @@
 package honey;
 
+import honey.command.Command;
+import honey.command.CommandResult;
 import honey.exceptions.HoneyException;
-import honey.javafx.DialogBox;
 import honey.parser.Parser;
 import honey.storage.Storage;
 import honey.tasklist.TaskList;
@@ -11,18 +12,19 @@ import honey.tasklist.TaskList;
  * Honey is a personal task manager that helps users track todos, deadlines, and events.
  */
 public class Honey {
+    public static final String WELCOME_MESSAGE = "Hello Bee Bee! I'm Honey <3\n"
+            + "What can I do for you? I will do it SWEETLY ~";
+    public static final String GOODBYE_MESSAGE = "Bye Bee Bee! Hope to see you again soon:)";
+
     /**
      * Storage component for saving and loading tasks
      */
-    private Storage storage;
+    private final Storage storage;
     /**
      * Task list containing all user tasks
      */
     private TaskList tasks;
-
-    private Parser parser;
-    public static final String WELCOME_MESSAGE = "Hello Bee Bee! I'm Honey <3\nWhat can I do for you? I will do it SWEETLY ~";
-    public static final String GOODBYE_MESSAGE = "Bye Bee Bee! Hope to see you again soon:)";
+    private final Parser parser;
 
     /**
      * Constructs a new Honey application with the specified storage file path.
@@ -43,7 +45,10 @@ public class Honey {
 
     public String getResponse(String input) {
         try {
-            return parser.executeCommand(input, tasks, storage);
+            Command command = parser.parseCommand(input);
+            command.setData(tasks, storage);
+            CommandResult result = command.execute();
+            return result.getFeedbackToUser();
         } catch (HoneyException e) {
             return e.getMessage();
         }

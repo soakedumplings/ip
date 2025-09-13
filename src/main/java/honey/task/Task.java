@@ -11,19 +11,19 @@ public class Task {
     /** Completion status of the task */
     protected boolean isDone;
     /** Type of the task */
-    protected String type;
+    protected TaskType taskType;
 
     /**
      * Constructs a new task with the specified description and type.
      * The task is initially marked as not done.
      *
      * @param description Description of the task.
-     * @param type Type of the task.
+     * @param taskType Type of the task.
      */
-    public Task(String description, String type) {
+    public Task(String description, TaskType taskType) {
         this.description = description;
         this.isDone = false;
-        this.type = type;
+        this.taskType = taskType;
     }
 
     /**
@@ -67,7 +67,16 @@ public class Task {
      * @return Type of the task.
      */
     public String getType() {
-        return this.type;
+        return this.taskType.getSymbol();
+    }
+
+    /**
+     * Returns the TaskType enum of this task.
+     *
+     * @return TaskType enum of the task.
+     */
+    public TaskType getTaskType() {
+        return this.taskType;
     }
 
     /**

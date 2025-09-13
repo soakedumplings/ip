@@ -31,7 +31,7 @@ public class Event extends Task {
      * @throws InvalidDateFormatException If the date format is invalid or start date is after end date.
      */
     public Event(String description) throws EmptyDescriptionException, InvalidDateFormatException {
-        super(description, "E");
+        super(description, TaskType.EVENT);
 
         if (description.trim().equals("event") || description.length() <= 6) {
             throw new EmptyDescriptionException("event");
@@ -84,9 +84,9 @@ public class Event extends Task {
         String formattedEnd = endDate.format(OUTPUT_FORMAT);
 
         if (startDate.equals(endDate)) {
-            return "[" + type + "][" + getStatusIcon() + "] " + taskName + " (on: " + formattedStart + ")";
+            return "[" + getType() + "][" + getStatusIcon() + "] " + taskName + " (on: " + formattedStart + ")";
         } else {
-            return "[" + type + "][" + getStatusIcon() + "] " + taskName
+            return "[" + getType() + "][" + getStatusIcon() + "] " + taskName
                 + " (from: " + formattedStart + " to: " + formattedEnd + ")";
         }
     }

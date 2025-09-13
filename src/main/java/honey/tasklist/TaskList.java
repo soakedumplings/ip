@@ -138,7 +138,7 @@ public class TaskList {
      * @param dateStr The date string to search for (yyyy-MM-dd format).
      * @throws HoneyException If the date format is invalid.
      */
-    public void findTasksDue(String dateStr) throws HoneyException {
+    public String findTasksDue(String dateStr) throws HoneyException {
         LocalDate queryDate;
 
         try {
@@ -167,14 +167,16 @@ public class TaskList {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         if (dueTasks.isEmpty()) {
-            System.out.println(" No tasks due on " + queryDate.format(formatter) + "!");
+            return " No tasks due on " + queryDate.format(formatter) + "!";
         } else {
-            System.out.println(" Here are the tasks due on " + queryDate.format(formatter) + ":");
+            StringBuilder tasksDue = new StringBuilder();
             for (int i = 0; i < dueTasks.size(); i++) {
-                System.out.println(" " + (i + 1) + ". " + dueTasks.get(i).toString());
+                tasksDue.append(i + 1).append(". ").append(dueTasks.get(i).toString()).append("\n");
             }
+            return " Here are the tasks due on " + queryDate.format(formatter) + ":\n" + tasksDue;
         }
     }
+
 
     /**
      * Finds and displays tasks that contain the specified keyword in their description.
