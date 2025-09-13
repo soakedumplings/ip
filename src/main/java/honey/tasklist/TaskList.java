@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,7 +57,7 @@ public class TaskList {
             Event task = new Event(description);
             return addToList(task);
         } else {
-            throw new InvalidCommandException(description);
+            throw new InvalidCommandException("Sorry I dont understand what is:\n" + description);
         }
     }
 
@@ -236,5 +237,34 @@ public class TaskList {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Sorts and displays all deadline tasks by their deadline dates in ascending order.
+     * Shows overdue tasks with an "OVERDUE" indication.
+     *
+     * @return A formatted string showing sorted deadline tasks with overdue indicators.
+     */
+    public String sortDeadlines() {
+        List<Deadline> deadlineTasks = tasks.stream()
+                .filter(task -> task instanceof Deadline)
+                .map(task -> (Deadline) task)
+                .sorted(Comparator.comparing(Deadline::getDeadline))
+                .collect(Collectors.toList());
+
+        if (deadlineTasks.isEmpty()) {
+            return "No deadline tasks found in your list!";
+        }
+
+        return IntStream.range(0, deadlineTasks.size())
+                .mapToObj(i -> {
+                    Deadline deadline = deadlineTasks.get(i);
+                    String taskString = (i + 1) + ". " + deadline.toString();
+                    if (deadline.isOverdue()) {
+                        taskString += " [OVERDUE]";
+                    }
+                    return taskString + "\n";
+                })
+                .collect(Collectors.joining("", "Here are your deadline tasks sorted by date:\n", ""));
     }
 }

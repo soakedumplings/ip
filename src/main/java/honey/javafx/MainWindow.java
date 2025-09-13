@@ -58,8 +58,7 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         try {
             String response = honey.getResponse(input);
-            if (response.equals("true")) {
-                addDialogs(DialogBox.getHoneyDialog(Honey.GOODBYE_MESSAGE, honeyImage));
+            if (response.equals(Honey.GOODBYE_MESSAGE)) {
                 Platform.exit();
             }
             addDialogs(

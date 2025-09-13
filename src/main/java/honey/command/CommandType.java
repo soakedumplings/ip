@@ -16,6 +16,7 @@ public enum CommandType {
     EVENT("event"),
     FIND("find"),
     DUE("due"),
+    SORT("sort"),
     BYE("bye");
 
     private final String commandWord;

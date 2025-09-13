@@ -121,5 +121,14 @@ public class Deadline extends Task {
     public String getTaskName() {
         return taskName;
     }
+
+    /**
+     * Checks if this deadline task is overdue (deadline has passed).
+     *
+     * @return true if the deadline has passed the current date/time, false otherwise.
+     */
+    public boolean isOverdue() {
+        return deadline.isBefore(LocalDateTime.now());
+    }
 }
 

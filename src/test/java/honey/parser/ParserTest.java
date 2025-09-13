@@ -13,6 +13,7 @@ import honey.command.FindCommand;
 import honey.command.IncorrectCommand;
 import honey.command.ListCommand;
 import honey.command.MarkCommand;
+import honey.command.SortCommand;
 
 /**
  * Simple, focused test for Parser.
@@ -77,6 +78,18 @@ public class ParserTest {
     @Test
     public void parseCommand_markWithoutNumber_returnsIncorrectCommand() {
         Command result = parser.parseCommand("mark");
+        assertTrue(result instanceof IncorrectCommand);
+    }
+
+    @Test
+    public void parseCommand_sortCommand_returnsSortCommand() {
+        Command result = parser.parseCommand("sort deadline");
+        assertTrue(result instanceof SortCommand);
+    }
+
+    @Test
+    public void parseCommand_sortWithoutArgument_returnsIncorrectCommand() {
+        Command result = parser.parseCommand("sort");
         assertTrue(result instanceof IncorrectCommand);
     }
 }
