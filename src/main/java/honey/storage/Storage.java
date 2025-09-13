@@ -32,6 +32,8 @@ public class Storage {
      * @param filePath Path to the data file for storing tasks.
      */
     public Storage(String filePath) {
+        assert filePath != null : "File path cannot be null";
+        assert !filePath.trim().isEmpty() : "File path cannot be empty";
         this.dataFilePath = Paths.get(filePath);
         this.dataDirPath = this.dataFilePath.getParent();
         this.encoder = new TaskEncoder();
@@ -45,10 +47,12 @@ public class Storage {
      * @param tasks List of tasks to save.
      */
     public void saveTasks(ArrayList<Task> tasks) {
+        assert tasks != null : "Tasks list cannot be null";
         try {
             // Create directory if it doesn't exist
             if (dataDirPath != null && !Files.exists(dataDirPath)) {
                 Files.createDirectories(dataDirPath);
+                assert Files.exists(dataDirPath) : "Directory should exist after creation";
             }
 
             // Write tasks to file
@@ -58,6 +62,7 @@ public class Storage {
                     writer.newLine();
                 }
             }
+            assert Files.exists(dataFilePath) : "Data file should exist after writing";
         } catch (IOException e) {
             System.out.println(" Warning: Could not save tasks to file. " + e.getMessage());
         }

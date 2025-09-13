@@ -21,6 +21,8 @@ public class Task {
      * @param taskType Type of the task.
      */
     public Task(String description, TaskType taskType) {
+        assert description != null : "Task description cannot be null";
+        assert taskType != null : "Task type cannot be null";
         this.description = description;
         this.isDone = false;
         this.taskType = taskType;

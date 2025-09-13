@@ -19,6 +19,8 @@ public abstract class Command {
      * @param storage The storage for persisting changes
      */
     public void setData(TaskList tasks, Storage storage) {
+        assert tasks != null : "TaskList cannot be null";
+        assert storage != null : "Storage cannot be null";
         this.tasks = tasks;
         this.storage = storage;
     }
