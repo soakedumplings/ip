@@ -21,6 +21,7 @@ public class TaskDecoder {
      * @throws HoneyException If the file format is invalid.
      */
     public Task decode(String line) throws HoneyException {
+        assert line != null : "Input line cannot be null";
         if (line.isEmpty()) {
             return null;
         }

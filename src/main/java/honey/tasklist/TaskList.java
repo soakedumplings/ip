@@ -32,6 +32,7 @@ public class TaskList {
      * @param tasks The list of tasks to initialize with.
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "Task list cannot be null";
         this.tasks = tasks;
     }
 
@@ -62,7 +63,10 @@ public class TaskList {
      * @param task The task to add.
      */
     public String addToList(Task task) {
+        assert task != null : "Task to add cannot be null";
+        int sizeBefore = tasks.size();
         tasks.add(task);
+        assert tasks.size() == sizeBefore + 1 : "Task list size should increase by 1 after adding";
         return "Got it. I've added this task: " + "\n" + task + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.";
     }
@@ -109,7 +113,9 @@ public class TaskList {
     public String deleteTask(int taskNumber) throws HoneyException {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
+            int sizeBefore = tasks.size();
             tasks.remove(taskNumber - 1);
+            assert tasks.size() == sizeBefore - 1 : "Task list size should decrease by 1 after deletion";
             return "Noted. I've removed this task:" + "\n" + task
                     + "\n" + "Now you have " + tasks.size() + " tasks in the list.";
         } else {
