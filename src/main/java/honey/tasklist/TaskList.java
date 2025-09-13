@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import honey.exceptions.HoneyException;
 import honey.exceptions.InvalidCommandException;
@@ -129,13 +132,12 @@ public class TaskList {
     public String listTasks() {
         if (tasks.isEmpty()) {
             return "No tasks in your list!";
-        } else {
-            StringBuilder list = new StringBuilder();
-            for (int i = 0; i < tasks.size(); i++) {
-                list.append(i + 1).append(". ").append(tasks.get(i).toString()).append("\n");
-            }
-            return "Here are the tasks in your list:\n" + list;
         }
+
+        String taskList = IntStream.range(0, tasks.size())
+                .mapToObj(i -> (i + 1) + ". " + tasks.get(i).toString() + "\n")
+                .collect(Collectors.joining());
+        return "Here are the tasks in your list:\n" + taskList;
     }
 
     /**
@@ -153,34 +155,28 @@ public class TaskList {
             throw new InvalidCommandException("Invalid date format. Please use yyyy-MM-dd");
         }
 
-        ArrayList<Task> dueTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                Deadline deadline = (Deadline) task;
-                LocalDate deadlineDate = deadline.getDeadline().toLocalDate();
-                if (deadlineDate.equals(queryDate)) {
-                    dueTasks.add(task);
-                }
-            } else if (task instanceof Event) {
-                Event event = (Event) task;
-                if ((event.getStartDate().equals(queryDate))
-                        || (event.getEndDate().equals(queryDate))
-                        || (queryDate.isAfter(event.getStartDate()) && queryDate.isBefore(event.getEndDate()))) {
-                    dueTasks.add(task);
-                }
-            }
-        }
+        List<Task> dueTasks = tasks.stream()
+                .filter(task -> {
+                    if (task instanceof Deadline deadline) {
+                        return deadline.getDeadline().toLocalDate().equals(queryDate);
+                    } else if (task instanceof Event event) {
+                        return event.getStartDate().equals(queryDate)
+                                || event.getEndDate().equals(queryDate)
+                                || (queryDate.isAfter(event.getStartDate()) && queryDate.isBefore(event.getEndDate()));
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         if (dueTasks.isEmpty()) {
             return " No tasks due on " + queryDate.format(formatter) + "!";
-        } else {
-            StringBuilder tasksDue = new StringBuilder();
-            for (int i = 0; i < dueTasks.size(); i++) {
-                tasksDue.append(i + 1).append(". ").append(dueTasks.get(i).toString()).append("\n");
-            }
-            return " Here are the tasks due on " + queryDate.format(formatter) + ":\n" + tasksDue;
         }
+
+        String taskList = IntStream.range(0, dueTasks.size())
+                .mapToObj(i -> (i + 1) + ". " + dueTasks.get(i).toString() + "\n")
+                .collect(Collectors.joining());
+        return " Here are the tasks due on " + queryDate.format(formatter) + ":\n" + taskList;
     }
 
 
@@ -191,25 +187,19 @@ public class TaskList {
      * @param keyword The keyword to search for in task descriptions.
      */
     public String findTasks(String keyword) {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
 
-        for (Task task : tasks) {
-            String taskDescription = getTaskDisplayDescription(task).toLowerCase();
-            if (taskDescription.contains(lowerKeyword)) {
-                matchingTasks.add(task);
-            }
-        }
+        List<Task> matchingTasks = tasks.stream()
+                .filter(task -> getTaskDisplayDescription(task).toLowerCase().contains(lowerKeyword))
+                .collect(Collectors.toList());
 
         if (matchingTasks.isEmpty()) {
             return "No matching tasks found!";
-        } else {
-            StringBuilder list = new StringBuilder();
-            for (int i = 0; i < matchingTasks.size(); i++) {
-                list.append(i + 1).append(". ").append(matchingTasks.get(i).toString()).append("\n");
-            }
-            return list.toString();
         }
+
+        return IntStream.range(0, matchingTasks.size())
+                .mapToObj(i -> (i + 1) + ". " + matchingTasks.get(i).toString() + "\n")
+                .collect(Collectors.joining());
     }
 
     /**
