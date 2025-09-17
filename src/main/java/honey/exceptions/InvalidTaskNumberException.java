@@ -13,6 +13,7 @@ public class InvalidTaskNumberException extends HoneyException {
     public InvalidTaskNumberException(String operation, int maxTasks) {
         super("Oh sweetie! 💛 I'm having trouble finding that task to " + operation + "!\n"
               + "Could you please choose a number between 1 and " + maxTasks + "? \n"
+              + "It could also be that our task list is empty. \n"
               + "Try using 'list' to see all our lovely tasks with their numbers! ✨");
     }
 }
