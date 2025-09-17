@@ -40,6 +40,12 @@ This document tracks the use of AI tools throughout the development of the Honey
 **Outcome**: Achieved clean code that passes all style checks with proper formatting and documentation  
 **Time Saved**: 45 minutes to 1 hour of manual style guide review and corrections
 
+### 7. Increment A-MoreTesting
+**Tool Used**: AI for comprehensive JUnit test development  
+**Purpose**: Created extensive test suites following AddressBook Level 2 patterns, covering nearly all testable code automatically with proper test organization matching main directory structure  
+**Outcome**: Developed individual test files for each class (AddCommandTest.java, MarkCommandTest.java, UnmarkCommandTest.java, DeleteCommandTest.java, FindCommandTest.java, ListCommandTest.java, ExitCommandTest.java, SortCommandTest.java, DueCommandTest.java, IncorrectCommandTest.java, StorageTest.java) with comprehensive exception handling, proper @TempDir setup, and detailed edge case coverage  
+**Time Saved**: 4-5 hours of writing comprehensive test cases, setting up test infrastructure, organizing test structure to match codebase, and thinking through edge cases and exception scenarios
+
 ## Overall Observations
 
 ### What Worked Well
@@ -53,11 +59,11 @@ This document tracks the use of AI tools throughout the development of the Honey
 - **Context Awareness**: Sometimes needed additional context about project-specific requirements and constraints
 
 ### Time Savings Summary
-**Total Estimated Time Saved**: 4.5-6.5 hours across all increments  
+**Total Estimated Time Saved**: 8.5-11.5 hours across all increments  
 **Most Valuable Use Cases**: 
-1. Boilerplate code generation (A-MoreOOP)
-2. Creative content development (A-Personality)
-3. Comprehensive error handling (Level-5)
+1. Comprehensive test development (A-MoreTesting) - 4-5 hours
+2. Boilerplate code generation (A-MoreOOP) - 1-2 hours
+3. Creative content development (A-Personality) - 1-1.5 hours
 
 ### Key Learnings
 - AI tools are most effective for well-defined, structured tasks
