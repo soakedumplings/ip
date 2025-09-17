@@ -11,9 +11,9 @@ public class InvalidDateFormatException extends HoneyException {
      * @param expectedFormat The expected format for the date.
      */
     public InvalidDateFormatException(String taskType, String expectedFormat) {
-        super("OOPS!!! The " + taskType + " format is incorrect!\n"
-              + "Please use: " + expectedFormat + "\n"
-              + "Example: " + getExample(taskType));
+        super("Oh darling! 📅 I'm having a tiny bit of trouble with the " + taskType + " date format!\n"
+              + "Could you please use: " + expectedFormat + " 💝\n"
+              + "Here's a sweet example: " + getExample(taskType));
     }
 
     /**

@@ -12,9 +12,9 @@ import honey.tasklist.TaskList;
  * Honey is a personal task manager that helps users track todos, deadlines, and events.
  */
 public class Honey {
-    public static final String WELCOME_MESSAGE = "Hello Bee Bee! I'm Honey <3\n"
-            + "What can I do for you? I will do it SWEETLY ~";
-    public static final String GOODBYE_MESSAGE = "Bye Bee Bee! Hope to see you again soon:)";
+    public static final String WELCOME_MESSAGE = "Hello my sweet Bee! 🍯 Your Honey is here! \n"
+            + "Ready to buzz through your tasks together? Let's make today productive and sweet! ✨";
+    public static final String GOODBYE_MESSAGE = "Sweet dreams, my dear Bee! 🌙 Until we meet again, keep being amazing! 💕";
 
     /**
      * Storage component for saving and loading tasks

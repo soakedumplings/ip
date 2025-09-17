@@ -57,7 +57,7 @@ public class TaskList {
             Event task = new Event(description);
             return addToList(task);
         } else {
-            throw new InvalidCommandException("Sorry I dont understand what is:\n" + description);
+            throw new InvalidCommandException("Oh my! I'm a bit confused, sweetie. Could you help me understand what this means?\n" + description);
         }
     }
 
@@ -71,8 +71,8 @@ public class TaskList {
         int sizeBefore = tasks.size();
         tasks.add(task);
         assert tasks.size() == sizeBefore + 1 : "Task list size should increase by 1 after adding";
-        return "Got it. I've added this task: " + "\n" + task + "\n"
-                + "Now you have " + tasks.size() + " tasks in the list.";
+        return "Perfect, my dear! ✨ I've lovingly added this to our hive: " + "\n" + task + "\n"
+                + "Together we're managing " + tasks.size() + " sweet tasks! 🐝";
     }
 
     /**
@@ -85,7 +85,7 @@ public class TaskList {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsDone();
-            return "Nice! I've marked this task as done:" + "\n" + task;
+            return "Wonderful work, my sweet Bee! 🌟 Let's celebrate this accomplishment:" + "\n" + task + "\n" + "I'm so proud of us! 💕";
 
         } else {
             throw new InvalidTaskNumberException("mark", tasks.size());
@@ -102,7 +102,7 @@ public class TaskList {
         if (taskNumber >= 1 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsNotDone();
-            return "OK, I've marked this task as not done yet: " + "\n" + task;
+            return "No worries, darling! 💛 Sometimes we need more time, and that's perfectly okay:" + "\n" + task + "\n" + "We'll tackle it together when you're ready! 🤗";
         } else {
             throw new InvalidTaskNumberException("unmark", tasks.size());
         }
@@ -120,8 +120,8 @@ public class TaskList {
             int sizeBefore = tasks.size();
             tasks.remove(taskNumber - 1);
             assert tasks.size() == sizeBefore - 1 : "Task list size should decrease by 1 after deletion";
-            return "Noted. I've removed this task:" + "\n" + task
-                    + "\n" + "Now you have " + tasks.size() + " tasks in the list.";
+            return "All done, sweetheart! 🌸 I've gently removed this from our hive:" + "\n" + task
+                    + "\n" + "Now we're focusing on " + tasks.size() + " lovely tasks together! ✨";
         } else {
             throw new InvalidTaskNumberException("delete", tasks.size());
         }
@@ -132,13 +132,13 @@ public class TaskList {
      */
     public String listTasks() {
         if (tasks.isEmpty()) {
-            return "No tasks in your list!";
+            return "What a peaceful moment! 🌺 Our hive is empty and ready for new adventures, my dear Bee! 🍯";
         }
 
         String taskList = IntStream.range(0, tasks.size())
                 .mapToObj(i -> (i + 1) + ". " + tasks.get(i).toString() + "\n")
                 .collect(Collectors.joining());
-        return "Here are the tasks in your list:\n" + taskList;
+        return "Here's our beautiful collection of tasks, sweetie! Let's see what we're working on together: 💖\n" + taskList;
     }
 
     /**
@@ -171,13 +171,13 @@ public class TaskList {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         if (dueTasks.isEmpty()) {
-            return " No tasks due on " + queryDate.format(formatter) + "!";
+            return "✨ How lovely! No urgent tasks on " + queryDate.format(formatter) + " - perfect time for some self-care, my dear! 🌸";
         }
 
         String taskList = IntStream.range(0, dueTasks.size())
                 .mapToObj(i -> (i + 1) + ". " + dueTasks.get(i).toString() + "\n")
                 .collect(Collectors.joining());
-        return " Here are the tasks due on " + queryDate.format(formatter) + ":\n" + taskList;
+        return "💫 Here are our important tasks for " + queryDate.format(formatter) + ", darling! Let's tackle them together:\n" + taskList;
     }
 
 
@@ -195,7 +195,7 @@ public class TaskList {
                 .collect(Collectors.toList());
 
         if (matchingTasks.isEmpty()) {
-            return "No matching tasks found!";
+            return "Hmm, my sweet Bee! 🔍 I couldn't find any tasks with that keyword. Maybe we can try a different search? 💕";
         }
 
         return IntStream.range(0, matchingTasks.size())
@@ -253,7 +253,7 @@ public class TaskList {
                 .collect(Collectors.toList());
 
         if (deadlineTasks.isEmpty()) {
-            return "No deadline tasks found in your list!";
+            return "How wonderful! 🎉 No deadlines to worry about right now, my dear! Time to relax and maybe add some new goals? 🌟";
         }
 
         return IntStream.range(0, deadlineTasks.size())
@@ -265,6 +265,6 @@ public class TaskList {
                     }
                     return taskString + "\n";
                 })
-                .collect(Collectors.joining("", "Here are your deadline tasks sorted by date:\n", ""));
+                .collect(Collectors.joining("", "Here are our deadline tasks, beautifully organized by date, sweetheart! 📅✨\n", ""));
     }
 }

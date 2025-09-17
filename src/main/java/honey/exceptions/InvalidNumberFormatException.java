@@ -11,9 +11,9 @@ public class InvalidNumberFormatException extends HoneyException {
      * @param providedInput The input that was provided.
      */
     public InvalidNumberFormatException(String operation, String providedInput) {
-        super("OOPS!!! I need a valid number to " + operation + " a task!\n"
-              + "You provided: '" + providedInput + "'\n"
-              + "Please use: " + operation + " [number]\n"
-              + "Example: " + operation + " 1");
+        super("Oh honey! 🔢 I need a little number to " + operation + " a task for us!\n"
+              + "You gave me: '" + providedInput + "' but I was expecting a sweet number! 💕\n"
+              + "Could you try: " + operation + " [number]\n"
+              + "Like this: " + operation + " 1 ✨");
     }
 }

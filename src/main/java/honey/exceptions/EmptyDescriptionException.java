@@ -11,8 +11,8 @@ public class EmptyDescriptionException extends HoneyException {
      * @param taskType Type of task that has empty description.
      */
     public EmptyDescriptionException(String taskType) {
-        super("OOPS!!! The description of a " + taskType + " cannot be empty.\n"
-              + "Please provide a description like: " + getExample(taskType));
+        super("Oh my dear! 🌸 I need a little more detail for this " + taskType + " to help you properly!\n"
+              + "Could you try something sweet like: " + getExample(taskType) + " 💕");
     }
 
     /**
